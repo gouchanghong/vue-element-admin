@@ -1,63 +1,56 @@
 <template>
   <div class="login-container">
 
+    <div class="title-container">
+      <div class="title">{{ $t('login.sysname') }}</div>
+    </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
-      <div class="title-container">
-        <h3 class="title">{{ $t('login.title') }}</h3>
-        <lang-select class="set-language"/>
+      <div class="login-form-div">
+        <div class="login-form-container">
+          <div class="login-title">{{ $t('login.title') }}</div>
+        </div>
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <img src="../../assets/login-images/account.png" >
+          </span>
+          <el-input
+            :placeholder="$t('login.username')"
+            name="username"
+            type="text"
+            auto-complete="on"
+          />
+        </el-form-item>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <img src="../../assets/login-images/pwd.png" >
+          </span>
+          <el-input
+            :type="passwordType"
+            :placeholder="$t('login.password')"
+            name="password"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin" />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon icon-class="eye" />
+          </span>
+        </el-form-item>
+        <el-form-item prop="verifyCode">
+          <span class="svg-container">
+            <img src="../../assets/login-images/check.png" >
+          </span>
+          <el-input
+            :placeholder="$t('login.verifyCode')"
+            name="verifyCode"
+            type="text"
+            auto-complete="on"
+          />
+          <img class="verify-img" src="http://203.195.174.39:8080/VarietyIntroduction/randCodeImage" >
+          <span class="change-verify-code" @click.native.prevent="changeVerify">换一张</span>
+        </el-form-item>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-top:30px;border-radius:24px;background: #5753f5;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
       </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          auto-complete="on"
-        />
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :type="passwordType"
-          v-model="loginForm.password"
-          :placeholder="$t('login.password')"
-          name="password"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin" />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
-      </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
-      <div class="tips">
-        <span>{{ $t('login.username') }} : admin</span>
-        <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:18px;">{{ $t('login.username') }} : editor</span>
-        <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-      </div>
-
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{ $t('login.thirdparty') }}</el-button>
     </el-form>
-
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
 
   </div>
 </template>
@@ -73,14 +66,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('请输入6位以上密码'))
       } else {
         callback()
       }
@@ -139,6 +132,9 @@ export default {
         }
       })
     },
+    changeVerify() {
+
+    },
     afterQRScan() {
       // const hash = window.location.hash.slice(1)
       // const hashObj = getQueryObject(hash)
@@ -190,8 +186,9 @@ export default {
         -webkit-appearance: none;
         border-radius: 0px;
         padding: 12px 5px 12px 15px;
-        color: $light_gray;
+        color: #999999;
         height: 47px;
+        font-size: 16px;
         caret-color: $cursor;
         &:-webkit-autofill {
           -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -200,10 +197,11 @@ export default {
       }
     }
     .el-form-item {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
+      border: 0px solid rgba(0, 0, 0, 0.1);
+      background: rgba(0, 0, 0, 0);
+      border-radius: 2px;
       color: #454545;
+      border-bottom: 1px solid #dfdfdf;
     }
   }
 </style>
@@ -211,21 +209,27 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
-$light_gray:#eee;
+$light_gray:#fff;
+$block_gray:#000;
 
 .login-container {
   position: fixed;
   height: 100%;
   width: 100%;
-  background-color: $bg;
+  background: url("../../assets/login-images/bg.png") no-repeat;
   .login-form {
     position: absolute;
-    left: 0;
+    left: 50%;
+    top: 50%;
     right: 0;
-    width: 520px;
+    width: 500px;
+    height: 540px;
     max-width: 100%;
-    padding: 35px 35px 15px 35px;
-    margin: 120px auto;
+    margin: -270px auto auto auto;
+    background: url("../../assets/login-images/login.png") no-repeat;
+    .login-form-div{
+      padding: 70px;
+    }
   }
   .tips {
     font-size: 14px;
@@ -247,17 +251,32 @@ $light_gray:#eee;
   .title-container {
     position: relative;
     .title {
-      font-size: 26px;
+      position: absolute;
+      left: 73px;
+      top: 55px;
+      font-size: 40px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
       text-align: center;
-      font-weight: bold;
+      font-family: "Microsoft YaHei";
     }
     .set-language {
       color: #fff;
       position: absolute;
       top: 5px;
       right: 0px;
+    }
+  }
+
+  .login-form-container {
+    position: relative;
+    .login-title {
+      left: 73px;
+      top: 55px;
+      font-size: 23px;
+      color: $block_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-family: "Microsoft YaHei";
     }
   }
   .show-pwd {
@@ -273,6 +292,14 @@ $light_gray:#eee;
     position: absolute;
     right: 35px;
     bottom: 28px;
+  }
+  .verify-img{
+    position: absolute;
+    right: 60px;
+    bottom: 0;
+  }
+  .change-verify-code{
+    position: absolute;float: right;bottom: 0;width: 45px;right: 0;color: #6bce00;
   }
 }
 </style>

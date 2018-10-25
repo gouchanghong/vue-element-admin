@@ -73,10 +73,12 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '系统登录',
+    sysname: '区域人口健康平台',
+    title: '登录',
     logIn: '登录',
-    username: '账号',
-    password: '密码',
+    username: '请输入您的账号',
+    password: '请输入您的密码',
+    verifyCode: '请输入验证码',
     any: '随便填',
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
