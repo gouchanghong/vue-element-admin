@@ -7,6 +7,7 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /* Router Modules */
+import basicRegistrationRouter from './modules/basicRegistration'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
@@ -156,6 +157,7 @@ export const asyncRouterMap = [
   },
 
   /** When your routing table is too long, you can split it into small modules**/
+  basicRegistrationRouter,
   componentsRouter,
   chartsRouter,
   nestedRouter,
