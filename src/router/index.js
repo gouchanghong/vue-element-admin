@@ -12,6 +12,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import welcomeRouter from './modules/welcome'
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -66,12 +67,18 @@ export const constantRouterMap = [
   {
     path: '',
     component: Layout,
-    redirect: 'dashboard',
+    redirect: 'welcome',
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      },
+      {
+        path: 'welcome',
+        component: () => import('@/views/welcome/index'),
+        name: 'Welcome',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
       }
     ]
@@ -157,6 +164,7 @@ export const asyncRouterMap = [
   },
 
   /** When your routing table is too long, you can split it into small modules**/
+  welcomeRouter,
   basicRegistrationRouter,
   componentsRouter,
   chartsRouter,

@@ -20,6 +20,7 @@
             name="username"
             type="text"
             auto-complete="on"
+            unselectable=""
           />
         </el-form-item>
         <el-form-item prop="password">
@@ -37,7 +38,7 @@
             <svg-icon icon-class="eye" />
           </span>
         </el-form-item>
-        <el-form-item prop="verifyCode">
+        <el-form-item prop="verifycode">
           <span class="svg-container">
             <img src="../../assets/login-images/check.png" >
           </span>
@@ -46,20 +47,22 @@
             :placeholder="$t('login.verifyCode')"
             name="verifyCode"
             type="text"
-            auto-complete="on"
-          />
-          <img :src="verifyUrl" class="verify-img" >
-          <a type="text" class="change-verify-code" @click="refreshCode()">换一张</a>
-          <!--<a class="change-verify-code" href="javascript:;" @click="refreshCode()">换一张</a>-->
+            auto-complete="on"/>
+          <a @click="refreshCode" ><img :src="verifyUrl" class="verify-img" ></a>
+          <a type="text" class="change-verify-code" @click="refreshCode">换一张</a>
         </el-form-item>
-        <el-button :loading="loading" type="primary" style="width:100%;margin-top:30px;border-radius:24px;background: #5753f5;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+        <el-form-item>
+          <el-button :loading="loading" type="primary" class="btn-submit" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+        </el-form-item>
       </div>
     </el-form>
-
+    <div class="clearfix"/>
+    <div class="copyright">copyright@2018-2024 By linksoft 版权所有</div>
   </div>
 </template>
 <script>
 var verifyCodeUrl = 'http://nj.gynjzx.cn/cas-webapp/auth_image.jsp'
+var currVeriftCodeUrl = verifyCodeUrl
 
 import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
@@ -86,7 +89,7 @@ export default {
     const validateVerifyCode = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入验证码'))
-      } else if (value !== this.identifyCode) {
+      } else if (value !== '1234') {
         console.log('validateVerifycode:', value)
         callback(new Error('验证码不正确!'))
       } else {
@@ -97,7 +100,8 @@ export default {
       loginForm: {
         username: 'admin',
         password: '1111111',
-        verifycode: ''
+        verifycode: '1234',
+        verifyUrl: currVeriftCodeUrl
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -107,7 +111,7 @@ export default {
       passwordType: 'password',
       loading: false,
       showDialog: false,
-      redirect: undefined
+      redirect: 'welcome/index'
     }
   },
   watch: {
@@ -126,10 +130,17 @@ export default {
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
+  mounted() {
+    // this.refreshCode()
+  },
   methods: {
     refreshCode() {
+      var dt = new Date().getTime()
       // 切换验证码
-      this.verifyUrl = verifyCodeUrl + '?_r=' + new Date().getMilliseconds()
+      currVeriftCodeUrl = verifyCodeUrl + '?r=' + dt
+      this.verifyUrl = currVeriftCodeUrl
+      this.loading = !this.loading
+      this.loading = !this.loading
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -179,15 +190,21 @@ export default {
   .login-container .el-input input::first-line{
     color: #999999 !important;
   }
+  .btn-submit{
+    width:100%;margin-top:30px;border-radius:24px;background: #5753f5;
+  }
 </style>
 <style rel="stylesheet/scss" lang="scss">
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
   $bg:#283443;
-  $light_gray:#eee;
-  $cursor: #fff;
+  $light_gray:#999;
+  $cursor: #999;
 
+  *{
+    font-family: "Microsoft YaHei" !important;
+  }
   @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
     .login-container .el-input input{
       color: $cursor;
@@ -208,7 +225,7 @@ export default {
         border: 0px;
         -webkit-appearance: none;
         border-radius: 0px;
-        padding: 12px 5px 12px 15px;
+        /*padding: 12px 5px 12px 15px;*/
         color: #999999;
         height: 47px;
         font-size: 16px;
@@ -225,6 +242,14 @@ export default {
       border-radius: 2px;
       color: #454545;
       border-bottom: 1px solid #dfdfdf;
+    }
+    .copyright{
+      text-align: center;
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      margin-left: -150px;
+      color: #ffffff;
     }
   }
 </style>
