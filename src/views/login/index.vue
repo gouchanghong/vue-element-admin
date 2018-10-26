@@ -111,7 +111,7 @@ export default {
       passwordType: 'password',
       loading: false,
       showDialog: false,
-      redirect: 'welcome/index'
+      redirect: undefined
     }
   },
   watch: {
