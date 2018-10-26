@@ -32,8 +32,7 @@
             :type="passwordType"
             :placeholder="$t('login.password')"
             name="password"
-            auto-complete="on"
-            @keyup.enter.native="handleLogin" />
+            auto-complete="on" />
           <span class="show-pwd" @click="showPwd">
             <svg-icon icon-class="eye" />
           </span>
