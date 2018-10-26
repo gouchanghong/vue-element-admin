@@ -9,8 +9,10 @@
       :data="data2"
       :props="defaultProps"
       :filter-node-method="filterNode"
+      :expand-on-click-node="false"
+      default-expand-all
       class="filter-tree"
-      default-expand-all/>
+      @node-click="sendOrgCode"/>
   </div>
 </template>
 <script>
@@ -70,6 +72,10 @@ export default {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
+    },
+    sendOrgCode(data) {
+      console.info(data.id + '11111111111')
+      this.$emit('getOrgCode', data.id) // 第一参数自定义事件，第二参数就是传递消息
     }
   }
 }
