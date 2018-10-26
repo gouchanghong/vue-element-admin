@@ -67,20 +67,20 @@ export const constantRouterMap = [
   {
     path: '',
     component: Layout,
-    redirect: 'welcome',
+    redirect: 'dashboard',
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-      },
+      }/*,
       {
         path: 'welcome',
         component: () => import('@/views/welcome/index'),
         name: 'Welcome',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-      }
+      }*/
     ]
   },
   {
@@ -170,7 +170,13 @@ export const asyncRouterMap = [
   chartsRouter,
   nestedRouter,
   tableRouter,
-
+  {
+    path: '/welcome',
+    component: Layout,
+    redirect: 'welcome/index',
+    name: 'Welcome',
+    meta: { title: 'welcome', icon: 'welcome', noCache: true }
+  },
   {
     path: '/example',
     component: Layout,
