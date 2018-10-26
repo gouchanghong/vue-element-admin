@@ -265,6 +265,7 @@ $block_gray:#000;
   height: 100%;
   width: 100%;
   background: url("../../assets/login-images/bg.png") no-repeat;
+  background-size:100% 100%;
   .login-form {
     position: absolute;
     left: 50%;
