@@ -13,7 +13,7 @@ const basicRegistrationRouter = {
       path: 'list',
       component: () => import('@/views/basicRegistration/SearchOrg'),
       name: 'search-org-list',
-      meta: { title: 'search-org-list' }
+      meta: { title: '部门查询' }
     }
   ]
 }
