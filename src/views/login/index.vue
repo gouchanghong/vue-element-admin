@@ -15,6 +15,7 @@
             <img src="../../assets/login-images/account.png" >
           </span>
           <el-input
+            v-model="loginForm.username"
             :placeholder="$t('login.username')"
             name="username"
             type="text"
@@ -26,6 +27,7 @@
             <img src="../../assets/login-images/pwd.png" >
           </span>
           <el-input
+            v-model="loginForm.password"
             :type="passwordType"
             :placeholder="$t('login.password')"
             name="password"
@@ -40,13 +42,15 @@
             <img src="../../assets/login-images/check.png" >
           </span>
           <el-input
+            v-model="loginForm.verifycode"
             :placeholder="$t('login.verifyCode')"
             name="verifyCode"
             type="text"
             auto-complete="on"
           />
-          <img class="verify-img" src="http://203.195.174.39:8080/VarietyIntroduction/randCodeImage" >
-          <span class="change-verify-code" @click.native.prevent="changeVerify">换一张</span>
+          <img :src="verifyUrl" class="verify-img" >
+          <a type="text" class="change-verify-code" @click="refreshCode()">换一张</a>
+          <!--<a class="change-verify-code" href="javascript:;" @click="refreshCode()">换一张</a>-->
         </el-form-item>
         <el-button :loading="loading" type="primary" style="width:100%;margin-top:30px;border-radius:24px;background: #5753f5;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
       </div>
@@ -54,12 +58,12 @@
 
   </div>
 </template>
-
 <script>
+var verifyCodeUrl = 'http://nj.gynjzx.cn/cas-webapp/auth_image.jsp'
+
 import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
-
 export default {
   name: 'Login',
   components: { LangSelect, SocialSign },
@@ -78,14 +82,27 @@ export default {
         callback()
       }
     }
+    // 验证码自定义验证规则
+    const validateVerifyCode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入验证码'))
+      } else if (value !== this.identifyCode) {
+        console.log('validateVerifycode:', value)
+        callback(new Error('验证码不正确!'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: 'admin',
-        password: '1111111'
+        password: '1111111',
+        verifycode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        verifycode: [{ required: true, trigger: 'blur', validator: validateVerifyCode }]
       },
       passwordType: 'password',
       loading: false,
@@ -103,12 +120,17 @@ export default {
 
   },
   created() {
+    this.refreshCode()
     // window.addEventListener('hashchange', this.afterQRScan)
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   methods: {
+    refreshCode() {
+      // 切换验证码
+      this.verifyUrl = verifyCodeUrl + '?_r=' + new Date().getMilliseconds()
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -132,9 +154,6 @@ export default {
         }
       })
     },
-    changeVerify() {
-
-    },
     afterQRScan() {
       // const hash = window.location.hash.slice(1)
       // const hashObj = getQueryObject(hash)
@@ -156,7 +175,11 @@ export default {
   }
 }
 </script>
-
+<style ref="stylesheet/scss" lang="scss">
+  .login-container .el-input input::first-line{
+    color: #999999 !important;
+  }
+</style>
 <style rel="stylesheet/scss" lang="scss">
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
