@@ -1,26 +1,30 @@
 <template>
   <split-pane :min-percent="20" :default-percent="20" split="vertical" @resize="resize">
     <template slot="paneL">
-      <org-tree @getOrgCode="handleFilterByOrgCode"/>
+      <org-tree style="position: fixed; top:60px;" @getOrgCode="handleFilterByOrgCode" />
     </template>
     <template slot="paneR">
       <div class="app-container">
         <div class="filter-container">
           <status-radio-check/>
-          <el-input :placeholder="$t('table.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-          <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>
-          </el-select>
-          <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>
-          </el-select>
-          <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-            <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
-          </el-select>
-          <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
-          <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('table.export') }}</el-button>
-          <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ $t('table.reviewer') }}</el-checkbox>
+          <span style="margin-left: 50px;">查询：</span>
+          <el-input :placeholder="$t('basicRegistration.searchPlaceholder')" v-model="listQuery.author" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+          <!--<el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">-->
+          <!--<el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>-->
+          <!--</el-select>-->
+          <!--<el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">-->
+          <!--<el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>-->
+          <!--</el-select>-->
+          <!--<el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">-->
+          <!--<el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>-->
+          <!--</el-select>-->
+          <el-button v-waves class="filter-item" style="margin-left: 6px;" type="primary" @click="handleFilter">{{ $t('table.search') }}</el-button>
+          <div style="float: right; margin-right: 20px;">
+            <el-button class="filter-item" style="background-color: #7D83FE; border-color: #7D83FE;" type="primary" @click="handleFilter">{{ $t('table.refresh') }}</el-button>
+            <el-button v-waves :loading="downloadLoading" class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" @click="handleDownload">{{ $t('table.export') }}</el-button>
+            <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleCreate">{{ $t('table.advancedQuery') }}</el-button>
+          <!--<el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ $t('table.reviewer') }}</el-checkbox>-->
+          </div>
         </div>
 
         <el-table
@@ -30,64 +34,65 @@
           border
           fit
           highlight-current-row
-          style="width: 100%;"
-          @sort-change="sortChange">
-          <el-table-column :label="$t('table.id')" prop="id" sortable="custom" align="center" width="65">
+          style="width: 100%;">
+          <el-table-column :label="$t('basicRegistration.belongOrgName')" min-width="200px" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span style="color: #32A8EE;">{{ scope.row.author }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('table.date')" width="150px" align="center">
-            <template slot-scope="scope">
-              <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$t('table.title')" min-width="150px">
-            <template slot-scope="scope">
-              <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
-              <el-tag>{{ scope.row.type | typeFilter }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$t('table.author')" width="110px" align="center">
+          <el-table-column :label="$t('basicRegistration.belongOfficeName')" min-width="200px" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.author }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="showReviewer" :label="$t('table.reviewer')" width="110px" align="center">
+          <el-table-column :label="$t('basicRegistration.name')" min-width="100px" align="center">
             <template slot-scope="scope">
-              <span style="color:red;">{{ scope.row.reviewer }}</span>
+              <span>{{ scope.row.author }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('table.importance')" width="80px">
+          <el-table-column :label="$t('basicRegistration.jobNum')" min-width="100px" align="center">
             <template slot-scope="scope">
-              <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon"/>
+              <span>{{ scope.row.author }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('table.readings')" align="center" width="95">
+          <el-table-column :label="$t('basicRegistration.birthday')" min-width="100px" align="center">
             <template slot-scope="scope">
-              <span v-if="scope.row.pageviews" class="link-type" @click="handleFetchPv(scope.row.pageviews)">{{ scope.row.pageviews }}</span>
-              <span v-else>0</span>
+              <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('table.status')" class-name="status-col" width="100">
+          <el-table-column :label="$t('basicRegistration.IDNO')" min-width="200px" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.author }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('basicRegistration.political')" min-width="120px" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.author }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('basicRegistration.educationBackground')" min-width="120px" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.author }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('basicRegistration.postCategory')" min-width="150px" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.author }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('basicRegistration.personType')" min-width="150px" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.author }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('basicRegistration.status')" class-name="status-col" min-width="60px">
             <template slot-scope="scope">
               <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-              <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{ $t('table.publish') }}
-              </el-button>
-              <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{ $t('table.draft') }}
-              </el-button>
-              <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{ $t('table.delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
         </el-table>
 
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :pager-count="11" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
         <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
           <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -139,7 +144,7 @@ import OrgTree from './components/OrgTree'
 import StatusRadioCheck from './components/StatusRadioCheck'
 import splitPane from 'vue-splitpane'
 
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { fetchList, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -184,7 +189,7 @@ export default {
         page: 1,
         limit: 20,
         importance: undefined,
-        title: undefined,
+        author: undefined,
         type: undefined,
         sort: '+id'
       },
@@ -242,30 +247,9 @@ export default {
       this.getList()
     },
     handleFilterByOrgCode: function(orgCode) {
-      console.info(orgCode + '22222222222')
       this.listQuery.page = 1
+      this.listQuery.author = orgCode
       this.getList()
-    },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
     },
     resetTemp() {
       this.temp = {
@@ -304,15 +288,6 @@ export default {
         }
       })
     },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -335,22 +310,6 @@ export default {
             })
           })
         }
-      })
-    },
-    handleDelete(row) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
-      })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
-    },
-    handleFetchPv(pv) {
-      fetchPv(pv).then(response => {
-        this.pvData = response.data.pvData
-        this.dialogPvVisible = true
       })
     },
     handleDownload() {

@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="orgTreeDiv">
+    <i :style="img" class="search-input-img"/>
     <el-input
       v-model="filterText"
-      placeholder="输入关键字进行过滤"/>
+      placeholder="请输入机构名称"
+      class="orgTreeInput"/>
 
     <el-tree
       ref="tree2"
@@ -21,18 +23,19 @@ export default {
   data() {
     return {
       filterText: '',
+      img: { background: "url('../../../static/imgs/search-1.png')" },
       data2: [{
         id: 1,
-        label: '一级 1',
+        label: 'Ho',
         children: [{
           id: 4,
-          label: '二级 1-1',
+          label: 'Cl',
           children: [{
             id: 9,
-            label: '三级 1-1-1'
+            label: 'Jh'
           }, {
             id: 10,
-            label: '三级 1-1-2'
+            label: 'Fu'
           }]
         }]
       }, {
@@ -73,10 +76,33 @@ export default {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
+
     sendOrgCode(data) {
-      console.info(data.id + '11111111111')
-      this.$emit('getOrgCode', data.id) // 第一参数自定义事件，第二参数就是传递消息
+      this.$emit('getOrgCode', data.label) // 第一参数自定义事件，第二参数就是传递消息
     }
   }
 }
 </script>
+<style>
+  .orgTreeDiv{
+    height: 100%;
+    width: 20%;
+    background-color: white;
+    border-radius: 6px;
+  }
+  .search-input-img{
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    z-index: 100;
+  }
+  .orgTreeInput input.el-input__inner {
+    border-radius: 15px;
+    background-color: #F4F4F4;
+    padding-right: 30px;
+    outline:none;
+    /*border-color: #dcdfe6;*/
+  }
+</style>
