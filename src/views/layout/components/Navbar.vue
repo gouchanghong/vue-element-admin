@@ -6,11 +6,15 @@
       <template v-if="device!=='mobile'">
         <error-log class="errLog-container right-menu-item"/>
 
-        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
-          <screenfull class="screenfull right-menu-item"/>
-        </el-tooltip>
+        <div style="line-height: 40px;float: left;width: 140px;">
+          <img src="../../../../static/welcome-images/admin-nav.png" class="right-menu-item">
+          <div>系统管理员</div>
+        </div>
+        <a style="line-height: 40px;" @click="logout">
+          <img src="../../../../static/welcome-images/close.png" class="right-menu-item">
+        </a>
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+        <!--<el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select class="international right-menu-item"/>
         </el-tooltip>
 
@@ -18,10 +22,10 @@
 
         <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
           <theme-picker class="theme-switch right-menu-item"/>
-        </el-tooltip>
+        </el-tooltip>-->
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+      <!--<el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
@@ -41,7 +45,7 @@
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
     </div>
   </div>
 </template>
@@ -105,13 +109,15 @@ export default {
   }
   .right-menu {
     float: right;
+    width: 15%;
     height: 100%;
     &:focus{
      outline: none;
     }
     .right-menu-item {
       display: inline-block;
-      margin: 0 8px;
+      margin: 5px 8px;
+      float: left;
     }
     .screenfull {
       height: 20px;
