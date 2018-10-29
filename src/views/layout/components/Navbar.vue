@@ -98,7 +98,7 @@ export default {
     line-height: 58px;
     height: 60px;
     float: left;
-    padding: 5 10px;
+    padding: 5px 10px;
   }
   .breadcrumb-container{
     float: left;
