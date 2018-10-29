@@ -1,5 +1,9 @@
 <template>
   <el-scrollbar wrap-class="scrollbar-wrapper">
+    <div :class="systemLogoClass">
+      <img :src="logoUrl" >
+      <div>{{ systemName }}</div>
+    </div>
     <el-menu
       :show-timeout="200"
       :default-active="$route.path"
@@ -20,6 +24,12 @@ import SidebarItem from './SidebarItem'
 
 export default {
   components: { SidebarItem },
+  data() {
+    return {
+      logoUrl: '../../../static/imgs/basicRegistration-logo.png',
+      systemName: '基础注册'
+    }
+  },
   computed: {
     ...mapGetters([
       'permission_routers',
@@ -27,7 +37,42 @@ export default {
     ]),
     isCollapse() {
       return !this.sidebar.opened
+    },
+    systemLogoClass: function() {
+      return this.sidebar.systemLogoClass
     }
   }
 }
 </script>
+<style>
+  .systemLogo{
+    height: 171px;
+    width: 220px;
+    background-color: #2E3D50;
+    border-bottom: 1px #666666 solid;
+    margin: 0 auto;
+  }
+  .systemLogo img{
+    height: 78px;
+    width: 78px;
+    margin-top: 36px;
+    margin-left: 71px;
+  }
+  .systemLogo div{
+    font-size: 16px;
+    color: white;
+    margin-top: 17px;
+    margin-left: 77px;
+  }
+
+  .systemLogo-small{
+    height: 60px;
+    background-color: #2E3D50;
+  }
+  .systemLogo-small img{
+    height: 30px;
+    width: 30px;
+    margin-top: 15px;
+    margin-left: 2px;
+  }
+</style>

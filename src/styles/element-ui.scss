@@ -89,12 +89,17 @@
    }
  }
 
+ .el-menu{
+   border-top: 1px black solid;
+ }
+
  .el-menu-item{
    height: 50px;
    line-height: 50px;
  }
 
  .el-menu-item.is-active{
+   padding-left: 13px !important;
    background-color: #202F41 !important;
    border-left: #32A8EE 7px solid;
  }

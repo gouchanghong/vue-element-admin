@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 const app = {
   state: {
     sidebar: {
+      systemLogoClass: 'systemLogo',
       opened: !+Cookies.get('sidebarStatus'),
       withoutAnimation: false
     },
@@ -14,8 +15,10 @@ const app = {
     TOGGLE_SIDEBAR: state => {
       if (state.sidebar.opened) {
         Cookies.set('sidebarStatus', 1)
+        state.sidebar.systemLogoClass = 'systemLogo-small'
       } else {
         Cookies.set('sidebarStatus', 0)
+        state.sidebar.systemLogoClass = 'systemLogo'
       }
       state.sidebar.opened = !state.sidebar.opened
       state.sidebar.withoutAnimation = false
