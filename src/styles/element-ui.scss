@@ -81,9 +81,20 @@
   }
 }
 
+ //分页靠右展示
  .el-pagination {
    text-align: right;
    .el-pagination__total {
      //float: left;
    }
+ }
+
+ .el-menu-item{
+   height: 50px;
+   line-height: 50px;
+ }
+
+ .el-menu-item.is-active{
+   background-color: #202F41 !important;
+   border-left: #32A8EE 7px solid;
  }
