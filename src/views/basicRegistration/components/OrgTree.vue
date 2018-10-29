@@ -12,8 +12,8 @@
       :props="defaultProps"
       :filter-node-method="filterNode"
       :expand-on-click-node="false"
-      default-expand-all
-      class="filter-tree"
+      accordion
+      class="filter-tree orgTreeElDiv"
       @node-click="sendOrgCode"/>
   </div>
 </template>
@@ -85,8 +85,9 @@ export default {
 </script>
 <style>
   .orgTreeDiv{
-    height: 100%;
-    width: 20%;
+    height: 92%;
+    width: 200px;
+    margin-left: 10px;
     background-color: white;
     border-radius: 6px;
   }
@@ -94,15 +95,22 @@ export default {
     width: 18px;
     height: 18px;
     position: absolute;
-    top: 6px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     z-index: 100;
   }
   .orgTreeInput input.el-input__inner {
-    border-radius: 15px;
+    width: 180px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-radius: 100px;
     background-color: #F4F4F4;
     padding-right: 30px;
     outline:none;
     /*border-color: #dcdfe6;*/
+  }
+  .orgTreeElDiv {
+    padding-left: 20px;
+    padding-top: 25px;
   }
 </style>

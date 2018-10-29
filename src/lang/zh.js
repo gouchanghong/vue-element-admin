@@ -116,7 +116,10 @@ export default {
     educationBackground: '学历',
     postCategory: '岗位类别',
     personType: '人员性质',
-    status: '状态'
+    status: '状态',
+    condition1: '条件一',
+    condition2: '条件二',
+    condition3: '条件三'
   },
   table: {
     dynamicTips1: '固定表头, 按照表头顺序排序',
