@@ -103,3 +103,25 @@
    background-color: #202F41 !important;
    border-left: #32A8EE 7px solid;
  }
+
+ .el-table{
+   color: #666666;
+ }
+
+ //弹出层样式
+ .el-dialog__header{
+   padding: 10px 20px 10px;
+   background-color: #EEEEEE;
+ }
+
+ .el-dialog__headerbtn{
+   top: 12px;
+ }
+
+ .el-dialog__footer{
+   padding: 10px 20px 10px;
+   background-color: #EEEEEE;
+ }
+ .el-dropdown-menu.el-popper.el-dropdown-menu--small{
+   top: 35px !important;
+ }

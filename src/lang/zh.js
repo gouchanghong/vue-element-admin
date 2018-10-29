@@ -65,7 +65,8 @@ export default {
     externalLink: '外链'
   },
   navbar: {
-    logOut: '退出登录',
+    changePassword: '修改密码',
+    logOut: '注销登录',
     dashboard: '首页',
     github: '项目地址',
     screenfull: '全屏',
@@ -117,9 +118,9 @@ export default {
     postCategory: '岗位类别',
     personType: '人员性质',
     status: '状态',
-    condition1: '条件一',
-    condition2: '条件二',
-    condition3: '条件三'
+    condition1: '条件一：',
+    condition2: '条件二：',
+    condition3: '条件三：'
   },
   table: {
     dynamicTips1: '固定表头, 按照表头顺序排序',

@@ -3,7 +3,7 @@
     <org-tree style="position: fixed; top:70px;" @getOrgCode="handleFilterByOrgCode" />
     <div class="app-container searchDiv">
       <div class="filter-container">
-        <status-radio-check/>
+        <status-radio-check style="margin-left: 18px;"/>
         <span style="margin-left: 50px;">查询：</span>
         <el-input :placeholder="$t('basicRegistration.searchPlaceholder')" v-model="listQuery.author" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
         <el-button v-waves class="filter-item" style="margin-left: 6px;" type="primary" @click="handleFilter">{{ $t('table.search') }}</el-button>
@@ -18,8 +18,8 @@
         v-loading="listLoading"
         :key="tableKey"
         :data="list"
-        height="calc(100vh - 301px)"
-        border
+        height="calc(100vh - 227px)"
+        stripe
         fit
         highlight-current-row
         style="width: 100%;">
@@ -82,8 +82,8 @@
 
       <pagination :total="total" :pager-count="11" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-      <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-        <el-form ref="dataForm" :model="condition" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" class="searchDivDialog">
+        <el-form ref="dataForm" :model="condition" label-position="left" label-width="80px" style="width: 500px; margin-left:67px;">
           <el-form-item :label="$t('basicRegistration.condition1')" prop="condition1">
             <el-input v-model="condition.condition1"/>
           </el-form-item>
@@ -95,8 +95,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-          <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+          <el-button type="primary" style="margin-left: -15px;" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.search') }}</el-button>
+          <el-button style="margin-left: 35px;" @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
         </div>
       </el-dialog>
     </div>
@@ -279,4 +279,27 @@ export default {
     background-color: white;
     border-radius: 6px;
   }
+  .dialog-footer{
+    text-align: center;
+  }
+  .searchDivDialog div{
+    width: 500px;
+  }
+  .searchDivDialog input.el-input__inner {
+    width: 250px;
+  }
+  .searchDivDialog span.el-dialog__title {
+    font-size: 20px;
+    color: #000033;
+  }
+  .searchDivDialog label.el-form-item__label{
+    font-size: 16px;
+    color: #666666;
+  }
+  /*.searchDivDialog div.el-dialog__header{*/
+    /*background-color: #EEEEEE;*/
+  /*}*/
+  /*.searchDivDialog div.el-dialog__header{*/
+    /*background-color: #EEEEEE;*/
+  /*}*/
 </style>

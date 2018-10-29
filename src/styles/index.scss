@@ -128,7 +128,7 @@ code {
 
 //main-container全局样式
 .app-container {
-  padding: 20px;
+  padding: 10px 0px 0px 0px;
   font-size: 14px;
 }
 
@@ -176,7 +176,8 @@ code {
 }
 
 .filter-container {
-  padding-bottom: 10px;
+  padding-bottom: 0px;
+  border-bottom: 1px #CCCCCC solid;
   .filter-item {
     display: inline-block;
     vertical-align: middle;

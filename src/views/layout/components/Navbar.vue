@@ -6,46 +6,29 @@
       <template v-if="device!=='mobile'">
         <error-log class="errLog-container right-menu-item"/>
 
-        <div style="line-height: 40px;float: left;width: 140px;">
-          <img src="../../../../static/welcome-images/admin-nav.png" class="right-menu-item">
-          <div>系统管理员</div>
-        </div>
-        <a style="line-height: 40px;" @click="logout">
-          <img src="../../../../static/welcome-images/close.png" class="right-menu-item">
-        </a>
-
-        <!--<el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="international right-menu-item"/>
-        </el-tooltip>
-
-        <lang-select class="international right-menu-item"/>
-
-        <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
-          <theme-picker class="theme-switch right-menu-item"/>
-        </el-tooltip>-->
-      </template>
-
-      <!--<el-dropdown class="avatar-container right-menu-item" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              {{ $t('navbar.dashboard') }}
+        <el-dropdown class="avatar-container right-menu-item" trigger="click">
+          <div class="avatar-wrapper">
+            <img src="../../../../static/welcome-images/admin-nav.png" style="width: 30px; height: 30px;vertical-align:middle;" class="user-avatar">
+            <span style="margin-left: 14px;display:inline-block;">{{ name }}</span>
+            <i class="el-icon-caret-bottom"/>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <router-link to="/">
+              <el-dropdown-item>
+                {{ $t('navbar.changePassword') }}
+              </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>
-              {{ $t('navbar.github') }}
-            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <div style="float: right;" class="right-menu-item">
+          <a @click="logout">
+            <img src="../../../../static/welcome-images/close.png" style="width: 22px; height: 24px;">
           </a>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>-->
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -109,7 +92,7 @@ export default {
   }
   .right-menu {
     float: right;
-    width: 15%;
+    /*width: 15%;*/
     height: 100%;
     &:focus{
      outline: none;
@@ -129,11 +112,12 @@ export default {
       vertical-align: 15px;
     }
     .avatar-container {
-      height: 50px;
+      height: 60px;
       margin-right: 30px;
       .avatar-wrapper {
+        vertical-align:middle;
         cursor: pointer;
-        margin-top: 5px;
+        margin-top: -6px;
         position: relative;
         .user-avatar {
           width: 40px;
