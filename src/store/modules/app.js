@@ -9,7 +9,8 @@ const app = {
     },
     device: 'desktop',
     language: Cookies.get('language') || 'zh',
-    size: Cookies.get('size') || 'Small'
+    size: Cookies.get('size') || 'Small',
+    passwordChangeDialogVisible: false
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -38,6 +39,13 @@ const app = {
     SET_SIZE: (state, size) => {
       state.size = size
       Cookies.set('size', size)
+    },
+    TOGGLE_PASSWORD_CHANGE_DIALOG: state => {
+      if (state.passwordChangeDialogVisible) {
+        state.passwordChangeDialogVisible = false
+      } else {
+        state.passwordChangeDialogVisible = true
+      }
     }
   },
   actions: {
@@ -55,6 +63,9 @@ const app = {
     },
     setSize({ commit }, size) {
       commit('SET_SIZE', size)
+    },
+    togglePasswordChangeDialog({ commit }) {
+      commit('TOGGLE_PASSWORD_CHANGE_DIALOG')
     }
   }
 }

@@ -105,7 +105,6 @@
 <script>
 import OrgTree from './components/OrgTree'
 import StatusRadioCheck from './components/StatusRadioCheck'
-import splitPane from 'vue-splitpane'
 
 import { fetchList, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
@@ -114,7 +113,7 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 
 export default {
   name: 'SearchOrg',
-  components: { OrgTree, splitPane, Pagination, StatusRadioCheck },
+  components: { OrgTree, Pagination, StatusRadioCheck },
   directives: { waves },
   filters: {
     statusFilter(status) {

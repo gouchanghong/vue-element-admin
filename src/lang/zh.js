@@ -71,7 +71,12 @@ export default {
     github: '项目地址',
     screenfull: '全屏',
     theme: '换肤',
-    size: '布局大小'
+    size: '布局大小',
+    confirm: '确定',
+    cancel: '取消',
+    oldPassword: '原密码：',
+    newPassword: '新密码：',
+    confirmPassword: '确认新密码：'
   },
   login: {
     sysname: '区域人口健康平台',

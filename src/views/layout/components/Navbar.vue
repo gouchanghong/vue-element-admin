@@ -1,11 +1,10 @@
 <template>
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
+    <password-change/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <error-log class="errLog-container right-menu-item"/>
-
         <el-dropdown class="avatar-container right-menu-item" trigger="click">
           <div class="avatar-wrapper">
             <img src="../../../../static/welcome-images/admin-nav.png" style="width: 30px; height: 30px;vertical-align:middle;" class="user-avatar">
@@ -13,11 +12,11 @@
             <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/">
-              <el-dropdown-item>
-                {{ $t('navbar.changePassword') }}
-              </el-dropdown-item>
-            </router-link>
+            <!--<router-link to="/">-->
+            <el-dropdown-item>
+              <span style="display:block;" @click="togglePasswordChangeDialog">{{ $t('navbar.changePassword') }}</span>
+            </el-dropdown-item>
+            <!--</router-link>-->
             <el-dropdown-item divided>
               <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
@@ -36,20 +35,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import LangSelect from '@/components/LangSelect'
-import ThemePicker from '@/components/ThemePicker'
+import PasswordChange from '@/components/PasswordChange'
 
 export default {
   components: {
     Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    LangSelect,
-    ThemePicker
+    PasswordChange
+  },
+  data() {
+    return {
+      passwordChangeDialogVisible: false
+    }
   },
   computed: {
     ...mapGetters([
@@ -67,6 +63,9 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
+    },
+    togglePasswordChangeDialog() {
+      this.$store.dispatch('togglePasswordChangeDialog')
     }
   }
 }
@@ -83,9 +82,6 @@ export default {
     float: left;
     padding: 5px 10px;
   }
-  .breadcrumb-container{
-    float: left;
-  }
   .errLog-container {
     display: inline-block;
     vertical-align: top;
@@ -101,15 +97,6 @@ export default {
       display: inline-block;
       margin: 5px 8px;
       float: left;
-    }
-    .screenfull {
-      height: 20px;
-    }
-    .international{
-      vertical-align: top;
-    }
-    .theme-switch {
-      vertical-align: 15px;
     }
     .avatar-container {
       height: 60px;
