@@ -7,7 +7,6 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /* Router Modules */
-import basicRegistrationRouter from './modules/basicRegistration'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
@@ -115,6 +114,60 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+
+  /** 基础注册菜单 start**/
+  {
+    path: '/search-org',
+    component: Layout,
+    redirect: '/search-org/list',
+    name: 'search-org',
+    meta: {
+      title: '机构查询'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/basicRegistration/SearchOrg'),
+        name: 'search-org-list',
+        meta: { title: '机构查询', icon: 'documentation' }
+      }
+    ]
+  },
+  {
+    path: '/search-dept',
+    component: Layout,
+    redirect: '/search-dept/list',
+    name: 'search-dept',
+    meta: {
+      title: '机构查询'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/basicRegistration/SearchDept'),
+        name: 'search-dept-list',
+        meta: { title: '部门查询', icon: 'documentation' }
+      }
+    ]
+  },
+  {
+    path: '/search-user',
+    component: Layout,
+    redirect: '/search-user/list',
+    name: 'search-user',
+    meta: {
+      title: '机构查询'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/basicRegistration/SearchUser'),
+        name: 'search-user-list',
+        meta: { title: '人员查询', icon: 'documentation' }
+      }
+    ]
+  },
+  /** 基础注册菜单 end**/
   {
     path: '/permission',
     component: Layout,
@@ -161,7 +214,6 @@ export const asyncRouterMap = [
   },
 
   /** When your routing table is too long, you can split it into small modules**/
-  basicRegistrationRouter,
   componentsRouter,
   chartsRouter,
   nestedRouter,
