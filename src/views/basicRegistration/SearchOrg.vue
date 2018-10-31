@@ -75,7 +75,7 @@
         </el-table-column>
         <el-table-column :label="$t('basicRegistration.status')" class-name="status-col" min-width="60px">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+            <span :class="scope.row.author == 'Joseph'? classEnable : classDisable ">{{ scope.row.author }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -148,6 +148,8 @@ export default {
         condition2: undefined,
         condition3: undefined
       },
+      classEnable: 'classEnable',
+      classDisable: 'classDisable',
       dialogFormVisible: false,
       dialogStatus: '',
       dialogTitle: '高级查询',
@@ -295,10 +297,10 @@ export default {
     font-size: 16px;
     color: #666666;
   }
-  /*.searchDivDialog div.el-dialog__header{*/
-    /*background-color: #EEEEEE;*/
-  /*}*/
-  /*.searchDivDialog div.el-dialog__header{*/
-    /*background-color: #EEEEEE;*/
-  /*}*/
+  .classEnable{
+    color: #01E19F;
+  }
+  .classDisable{
+    color: red;
+  }
 </style>
