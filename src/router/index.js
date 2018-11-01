@@ -168,6 +168,25 @@ export const asyncRouterMap = [
     ]
   },
   /** 基础注册菜单 end**/
+  /** 权限管理菜单 start**/
+  {
+    path: '/manage-user',
+    component: Layout,
+    redirect: '/manage-user/list',
+    name: 'manage-user',
+    meta: {
+      title: '用户管理'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/authorManage/ManageUser'),
+        name: 'manage-user-list',
+        meta: { title: '用户管理', icon: 'documentation' }
+      }
+    ]
+  },
+  /** 权限管理菜单 end**/
   {
     path: '/permission',
     component: Layout,

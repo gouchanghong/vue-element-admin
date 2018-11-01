@@ -127,6 +127,21 @@ export default {
     condition2: '条件二：',
     condition3: '条件三：'
   },
+  authorManage: {
+    resetPassword: '重置密码',
+    allotOrg: '分配机构',
+    allotRole: '分配角色',
+    account: '登录名',
+    name: '姓名',
+    IDNum: '身份证号',
+    sex: '性别',
+    email: '电子邮箱',
+    mobilePhone: '手机号码',
+    loginCount: '登录次数',
+    lastLoginTime: '上次登录时间',
+    nearLoginTime: '最近登录时间',
+    status: '状态'
+  },
   table: {
     dynamicTips1: '固定表头, 按照表头顺序排序',
     dynamicTips2: '不固定表头, 按照点击顺序排序',
@@ -137,7 +152,7 @@ export default {
     type: '类型',
     remark: '点评',
     search: '查询',
-    add: '添加',
+    add: '新增',
     export: '导出',
     reviewer: '审核人',
     id: '序号',
@@ -153,7 +168,8 @@ export default {
     cancel: '取 消',
     confirm: '确 定',
     advancedQuery: '高级查询',
-    refresh: '刷新'
+    refresh: '刷新',
+    logout: '注销'
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
