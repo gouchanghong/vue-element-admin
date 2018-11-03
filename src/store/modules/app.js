@@ -5,7 +5,8 @@ const app = {
     sidebar: {
       systemLogoClass: 'systemLogo',
       opened: !+Cookies.get('sidebarStatus'),
-      withoutAnimation: false
+      withoutAnimation: false,
+      systemName: '基础注册'
     },
     device: 'desktop',
     language: Cookies.get('language') || 'zh',
@@ -24,6 +25,9 @@ const app = {
       }
       state.sidebar.opened = !state.sidebar.opened
       state.sidebar.withoutAnimation = false
+    },
+    SET_SYSTEM_NAME: (state, systemName) => {
+      state.sidebar.systemName = systemName
     },
     CLOSE_SIDEBAR: (state, withoutAnimation) => {
       Cookies.set('sidebarStatus', 1)
@@ -59,6 +63,9 @@ const app = {
   actions: {
     toggleSideBar({ commit }) {
       commit('TOGGLE_SIDEBAR')
+    },
+    setSystemName({ commit }, systemName) {
+      commit('SET_SYSTEM_NAME', systemName)
     },
     closeSideBar({ commit }, { withoutAnimation }) {
       commit('CLOSE_SIDEBAR', withoutAnimation)

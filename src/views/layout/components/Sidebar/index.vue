@@ -26,8 +26,7 @@ export default {
   components: { SidebarItem },
   data() {
     return {
-      logoUrl: '../../../static/imgs/basicRegistration-logo.png',
-      systemName: '基础注册'
+      logoUrl: '../../../static/imgs/basicRegistration-logo.png'
     }
   },
   computed: {
@@ -35,6 +34,9 @@ export default {
       'permission_routers',
       'sidebar'
     ]),
+    systemName() {
+      return this.sidebar.systemName
+    },
     isCollapse() {
       return !this.sidebar.opened
     },
