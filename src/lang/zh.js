@@ -169,7 +169,11 @@ export default {
     confirm: '确 定',
     advancedQuery: '高级查询',
     refresh: '刷新',
-    logout: '注销'
+    logout: '注销',
+    addAdvancedCondition: '新增条件'
+  },
+  form: {
+    pleaseSelect: '请选择'
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
