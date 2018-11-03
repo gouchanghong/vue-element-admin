@@ -8,6 +8,28 @@ const app = {
       withoutAnimation: false,
       systemName: '基础注册'
     },
+    searchOperator: [{
+      value: 'EQ',
+      label: '等于'
+    }, {
+      value: 'NEQ',
+      label: '不等于'
+    }, {
+      value: 'GTE',
+      label: '大于等于'
+    }, {
+      value: 'LTE',
+      label: '小于等于'
+    }, {
+      value: 'LIKE',
+      label: '包含'
+    }, {
+      value: 'NLIKE',
+      label: '不包含'
+    }, {
+      value: 'IN',
+      label: '包含其中一个'
+    }],
     device: 'desktop',
     language: Cookies.get('language') || 'zh',
     size: Cookies.get('size') || 'Small',
