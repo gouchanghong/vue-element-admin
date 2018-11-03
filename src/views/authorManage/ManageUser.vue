@@ -7,13 +7,13 @@
       <el-button v-waves class="filter-item" style="margin-left: 6px;" type="primary" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <div style="float: right; margin-right: 20px;">
         <el-button class="filter-item" style="background-color: #7D83FE; border-color: #7D83FE;" type="primary" @click="handleFilter">{{ $t('table.refresh') }}</el-button>
-        <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleFilter">{{ $t('table.add') }}</el-button>
-        <el-button class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" @click="handleFilter">{{ $t('table.edit') }}</el-button>
-        <el-button class="filter-item" style="background-color: #32A8EE; border-color: #32A8EE;" type="primary" @click="handleFilter">{{ $t('table.logout') }}</el-button>
-        <el-button class="filter-item" style="background-color: #FF8484; border-color: #FF8484;" type="primary" @click="handleFilter">{{ $t('authorManage.resetPassword') }}</el-button>
+        <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleCreate">{{ $t('table.add') }}</el-button>
+        <el-button class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" @click="handleUpdate">{{ $t('table.edit') }}</el-button>
+        <el-button class="filter-item" style="background-color: #32A8EE; border-color: #32A8EE;" type="primary" @click="logoutUser">{{ $t('table.logout') }}</el-button>
+        <el-button class="filter-item" style="background-color: #FF8484; border-color: #FF8484;" type="primary" @click="resetPassword">{{ $t('authorManage.resetPassword') }}</el-button>
         <el-button class="filter-item" style="background-color: #7D83FE; border-color: #7D83FE;" type="primary" @click="handleFilter">{{ $t('authorManage.allotOrg') }}</el-button>
-        <el-button v-waves :loading="downloadLoading" class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" @click="handleDownload">{{ $t('authorManage.allotRole') }}</el-button>
-        <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleCreate">{{ $t('table.advancedQuery') }}</el-button>
+        <el-button class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" >{{ $t('authorManage.allotRole') }}</el-button>
+        <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleAdvanced">{{ $t('table.advancedQuery') }}</el-button>
       </div>
     </div>
 
@@ -81,23 +81,63 @@
 
     <pagination :total="total" :pager-count="11" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" class="manageUserDivDialog">
-      <el-form ref="dataForm" :model="condition" label-position="left" label-width="80px" style="width: 500px; margin-left:67px;">
-        <el-form-item :label="$t('basicRegistration.condition1')" prop="condition1">
-          <el-input v-model="condition.condition1"/>
-        </el-form-item>
-        <el-form-item :label="$t('basicRegistration.condition2')" prop="condition2">
-          <el-input v-model="condition.condition2"/>
-        </el-form-item>
-        <el-form-item :label="$t('basicRegistration.condition3')" prop="condition3">
-          <el-input v-model="condition.condition3"/>
+    <el-dialog :title="advancedQueryTitle" :visible.sync="advancedQueryFormVisible" class="manageUserAdvancedQueryDivDialog" width="800px">
+      <el-form ref="advancedQueryForm" :model="advancedQueryForm" label-position="right" label-width="70px" style="width: 700px; margin-left:30px;">
+        <el-form-item v-for="(obj, index) in advancedQueryForm.cs" :label="'条件' + (index + 1) + '：'" :key="index">
+          <el-col :span="7">
+            <el-select v-model="obj.f" class="filter-item" placeholder="请选择">
+              <el-option v-for="item in fieldOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-col>
+          <el-col :span="7" style="margin-left: 5px;">
+            <el-select v-model="obj.o" class="filter-item" placeholder="请选择">
+              <el-option v-for="item in searchOperator" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-col>
+          <el-col :span="7" style="margin-left: 5px;">
+            <el-input v-model="obj.v" :placeholder="operatorTips(obj.o)"/>
+          </el-col>
+          <el-col :span="2" style="margin-left: 5px;">
+            <el-button @click.prevent="removeAdvanced(obj)">{{ $t('table.delete') }}</el-button>
+          </el-col>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" style="margin-left: -15px;" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.search') }}</el-button>
-        <el-button style="margin-left: 35px;" @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" style="margin-left: -15px;" @click="handleAdvancedQuery">{{ $t('table.search') }}</el-button>
+        <el-button style="margin-left: 35px;" @click="addAdvanced">{{ $t('table.addAdvancedCondition') }}</el-button>
+        <el-button style="margin-left: 35px;" @click="advancedQueryFormVisible = false">{{ $t('table.cancel') }}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="createOrUpdateTextMap[createOrUpdateStatus]" :visible.sync="createOrUpdateFormVisible" class="manageUserCreateOrUpdateDivDialog" width="500px">
+      <el-form ref="createOrUpdateForm" :rules="createOrUpdateRules" :model="createOrUpdateModel" label-position="right" label-width="70px" style="width: 400px; margin-left:30px;">
+        <el-form-item :label="$t('authorManage.account')" prop="loginname">
+          <el-input v-model="createOrUpdateModel.loginname"/>
+        </el-form-item>
+        <el-form-item :label="$t('authorManage.name')" prop="name">
+          <el-input v-model="createOrUpdateModel.name"/>
+        </el-form-item>
+        <el-form-item :label="$t('authorManage.IDNum')" prop="idnumber">
+          <el-input v-model="createOrUpdateModel.idnumber"/>
+        </el-form-item>
+        <el-form-item :label="$t('authorManage.sex')">
+          <el-select v-model="createOrUpdateModel.sex" class="filter-item">
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('authorManage.email')" prop="email">
+          <el-input v-model="createOrUpdateModel.email"/>
+        </el-form-item>
+        <el-form-item :label="$t('authorManage.mobilePhone')" prop="phonenumber">
+          <el-input v-model="createOrUpdateModel.phonenumber"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="createOrUpdateStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+        <el-button @click="createOrUpdateFormVisible = false">{{ $t('table.cancel') }}</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -105,29 +145,19 @@ import StatusRadioCheck from './components/StatusRadioCheck'
 
 import { fetchList, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'ManageUser',
   components: { Pagination, StatusRadioCheck },
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
+      currentRow: null,
       listQuery: {
         page: 1,
         limit: 10,
@@ -136,22 +166,77 @@ export default {
         type: undefined,
         sort: '+id'
       },
-      importanceOptions: [1, 2, 3],
-      sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-      statusOptions: ['published', 'draft', 'deleted'],
-      showReviewer: false,
-      condition: {
-        condition1: undefined,
-        condition2: undefined,
-        condition3: undefined
+      fieldOptions: [{
+        value: 'loginname',
+        label: '登录名'
+      }, {
+        value: 'name',
+        label: '姓名'
+      }, {
+        value: 'idnumber',
+        label: '身份证号'
+      }, {
+        value: 'sex',
+        label: '性别'
+      }, {
+        value: 'email',
+        label: '电子邮箱'
+      }, {
+        value: 'phonenumber',
+        label: '手机号码'
+      }],
+      advancedQueryForm: {
+        cs: [{
+          f: undefined,
+          o: 'EQ',
+          v: undefined
+        }]
       },
       classEnable: 'classEnable',
       classDisable: 'classDisable',
-      dialogFormVisible: false,
-      dialogStatus: '',
-      dialogTitle: '高级查询',
-      downloadLoading: false,
-      currentRow: null
+      advancedQueryFormVisible: false,
+      advancedQueryTitle: '高级查询',
+
+      sexOptions: [{
+        value: 'm',
+        label: '男'
+      }, {
+        value: 'f',
+        label: '女'
+      }],
+      createOrUpdateStatus: '',
+      createOrUpdateTextMap: {
+        update: '编辑',
+        create: '新增'
+      },
+      createOrUpdateFormVisible: false,
+      createOrUpdateRules: {
+        loginname: [{ required: true, message: '请输入登录名', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入姓名', trigger: 'blur' }]
+      },
+      createOrUpdateModel: {
+        id: 1,
+        loginname: '',
+        name: '',
+        idnumber: '',
+        sex: 'm',
+        email: '',
+        phonenumber: '',
+        status: 1
+      }
+    }
+  },
+  computed: {
+    searchOperator() {
+      return this.$store.getters.searchOperator
+    },
+    operatorTips() {
+      return function(operator) {
+        if (operator === 'IN') {
+          return '请使用逗号区分多个值'
+        }
+        return ''
+      }
     }
   },
   created() {
@@ -182,98 +267,140 @@ export default {
       this.listQuery.author = orgCode
       this.getList()
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
+    handleAdvancedQuery() {
+      this.listQuery.page = 1
+      this.getList()
+      this.advancedQueryFormVisible = false
+    },
+    resetModel() {
+      this.createOrUpdateModel = {
+        loginname: '',
+        name: '',
+        idnumber: '',
+        sex: 'm',
+        email: '',
+        phonenumber: ''
       }
     },
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+      this.resetModel()
+      this.createOrUpdateStatus = 'create'
+      this.createOrUpdateFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs['createOrUpdateForm'].clearValidate()
+      })
+    },
+    handleUpdate() {
+      // TODO 调用查询某个用户的API
+      this.createOrUpdateStatus = 'update'
+      this.createOrUpdateFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['createOrUpdateForm'].clearValidate()
       })
     },
     createData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['createOrUpdateForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+          // TODO 调用新增API
+          createArticle(this.createOrUpdateModel).then(() => {
+            this.list.unshift(this.createOrUpdateModel)
+            this.createOrUpdateFormVisible = false
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
           })
         }
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['createOrUpdateForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
+          // TODO 调用修改API
+          updateArticle(this.createOrUpdateModel).then(() => {
             for (const v of this.list) {
-              if (v.id === this.temp.id) {
+              if (v.id === this.createOrUpdateModel.id) {
                 const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
+                this.list.splice(index, 1, this.createOrUpdateModel)
                 break
               }
             }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.createOrUpdateFormVisible = false
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
           })
         }
       })
     },
-    handleDownload() {
-      this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-          const data = this.formatJson(filterVal, this.list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'table-list'
-          })
-          this.downloadLoading = false
-        })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
-    },
     handleCurrentChange(val) {
       this.currentRow = val
-      console.info(this.currentRow)
+    },
+    logoutUser() {
+      if (!this.currentRow) {
+        this.$message('请先选择一个用户')
+        return
+      }
+      this.$confirm('此操作将注销该用户，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // TODO 调用注销API
+        this.$message({
+          type: 'success',
+          message: '注销成功'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消注销'
+        })
+      })
+    },
+    resetPassword() {
+      if (!this.currentRow) {
+        this.$message('请先选择一个用户')
+        return
+      }
+      this.$confirm('此操作将重置该用户密码，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // TODO 调用重置密码API
+        this.$message({
+          type: 'success',
+          message: '重置成功'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消重置'
+        })
+      })
+    },
+    handleAdvanced() {
+      this.advancedQueryFormVisible = true
+    },
+    removeAdvanced(item) {
+      var index = this.advancedQueryForm.cs.indexOf(item)
+      if (index !== -1) {
+        this.advancedQueryForm.cs.splice(index, 1)
+      }
+    },
+    addAdvanced() {
+      this.advancedQueryForm.cs.push({
+        f: undefined,
+        o: 'EQ',
+        v: undefined
+      })
     }
   }
 }
 </script>
-<style>
+<style >
   .manageUserDiv{
     height: 91%;
     margin-left: 10px;
@@ -285,24 +412,18 @@ export default {
   .dialog-footer{
     text-align: center;
   }
-  .manageUserDivDialog div{
-    width: 500px;
-  }
-  .manageUserDivDialog input.el-input__inner {
-    width: 250px;
-  }
-  .manageUserDivDialog span.el-dialog__title {
+  .manageUserAdvancedQueryDivDialog span.el-dialog__title {
     font-size: 20px;
     color: #000033;
-  }
-  .manageUserDivDialog label.el-form-item__label{
-    font-size: 16px;
-    color: #666666;
   }
   .classEnable{
     color: #01E19F;
   }
   .classDisable{
     color: red;
+  }
+  .manageUserAdvancedQueryDivDialog span.el-dialog__title {
+    font-size: 20px;
+    color: #000033;
   }
 </style>
