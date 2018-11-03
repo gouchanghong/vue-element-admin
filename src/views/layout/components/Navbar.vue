@@ -2,6 +2,7 @@
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <password-change/>
+    <logout-confirm/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -18,12 +19,12 @@
             </el-dropdown-item>
             <!--</router-link>-->
             <el-dropdown-item divided>
-              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+              <span style="display:block;" @click="toggleLogoutConfirmDialog">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <div style="float: right;" class="right-menu-item">
-          <a @click="logout">
+          <a @click="toggleLogoutConfirmDialog">
             <img src="../../../../static/welcome-images/close.png" style="width: 22px; height: 24px;">
           </a>
         </div>
@@ -36,11 +37,13 @@
 import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import PasswordChange from '@/components/PasswordChange'
+import LogoutConfirm from '@/components/LogoutConfirm'
 
 export default {
   components: {
     Hamburger,
-    PasswordChange
+    PasswordChange,
+    LogoutConfirm
   },
   data() {
     return {
@@ -59,13 +62,17 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
-    },
+    // logout() {
+    //   this.$store.dispatch('LogOut').then(() => {
+    //     location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+    //   })
+    // },
     togglePasswordChangeDialog() {
       this.$store.dispatch('togglePasswordChangeDialog')
+    },
+    toggleLogoutConfirmDialog() {
+      console.info('2222222222222')
+      this.$store.dispatch('toggleLogoutConfirmDialog')
     }
   }
 }

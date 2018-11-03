@@ -10,7 +10,8 @@ const app = {
     device: 'desktop',
     language: Cookies.get('language') || 'zh',
     size: Cookies.get('size') || 'Small',
-    passwordChangeDialogVisible: false
+    passwordChangeDialogVisible: false,
+    logoutConfirmDialogVisible: false
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -46,6 +47,13 @@ const app = {
       } else {
         state.passwordChangeDialogVisible = true
       }
+    },
+    TOGGLE_LOGOUT_CONFIRM_DIALOG: state => {
+      if (state.logoutConfirmDialogVisible) {
+        state.logoutConfirmDialogVisible = false
+      } else {
+        state.logoutConfirmDialogVisible = true
+      }
     }
   },
   actions: {
@@ -66,6 +74,9 @@ const app = {
     },
     togglePasswordChangeDialog({ commit }) {
       commit('TOGGLE_PASSWORD_CHANGE_DIALOG')
+    },
+    toggleLogoutConfirmDialog({ commit }) {
+      commit('TOGGLE_LOGOUT_CONFIRM_DIALOG')
     }
   }
 }

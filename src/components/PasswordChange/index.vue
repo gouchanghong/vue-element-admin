@@ -78,7 +78,6 @@ export default {
       this.$refs['passwordChangeForm'].validate((valid) => {
         if (valid) {
           fetchList(this.listQuery).then(response => {
-            console.info(response.data.items)
             this.$store.dispatch('togglePasswordChangeDialog')
             this.$notify({
               title: '成功',

@@ -14,6 +14,7 @@ const getters = {
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   errorLogs: state => state.errorLog.logs,
-  passwordChangeDialogVisible: state => state.app.passwordChangeDialogVisible
+  passwordChangeDialogVisible: state => state.app.passwordChangeDialogVisible,
+  logoutConfirmDialogVisible: state => state.app.logoutConfirmDialogVisible
 }
 export default getters
