@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :title="passwordChangeDialogTitle" :visible.sync="passwordChangeDialogVisible" :before-close="handleClose" class="passwordChangeDialogDiv">
-      <el-form ref="passwordChangeForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 500px; margin-left:30px;">
+      <el-form ref="passwordChangeForm" :rules="rules" :model="temp" label-position="right" label-width="120px" style="width: 500px; margin-left:30px;">
         <el-form-item :label="$t('navbar.oldPassword')" prop="oldPassword">
           <el-input v-model="temp.oldPassword" auto-complete="off" placeholder="请输入原密码"/>
         </el-form-item>
@@ -110,6 +110,5 @@ export default {
   .passwordChangeDialogDiv label.el-form-item__label{
     font-size: 16px;
     color: #666666;
-    text-align: right;
   }
 </style>
