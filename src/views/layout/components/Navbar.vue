@@ -15,11 +15,13 @@
           <el-dropdown-menu slot="dropdown">
             <!--<router-link to="/">-->
             <el-dropdown-item>
-              <span style="display:block;" @click="togglePasswordChangeDialog">{{ $t('navbar.changePassword') }}</span>
+              <img src="../../../../static/welcome-images/password-change.png" style="width: 16px; height: 16px;vertical-align:middle; display: inline-block;" class="user-avatar">
+              <span style="display: inline-block; margin-left: 7px;" @click="togglePasswordChangeDialog">{{ $t('navbar.changePassword') }}</span>
             </el-dropdown-item>
             <!--</router-link>-->
             <el-dropdown-item divided>
-              <span style="display:block;" @click="toggleLogoutConfirmDialog">{{ $t('navbar.logOut') }}</span>
+              <img src="../../../../static/welcome-images/logout-drop-down-list.png" style="width: 16px; height: 16px;vertical-align:middle; display: inline-block;" class="user-avatar">
+              <span style="display: inline-block; margin-left: 7px;" @click="toggleLogoutConfirmDialog">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
