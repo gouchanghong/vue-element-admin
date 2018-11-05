@@ -57,7 +57,7 @@
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('authorManage.loginCount')" min-width="50px" align="center">
+      <el-table-column :label="$t('authorManage.loginCount')" min-width="70px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
         </template>
