@@ -10,14 +10,14 @@
         <div class="login-form-container">
           <div class="login-title">{{ $t('login.title') }}</div>
         </div>
-        <el-form-item prop="username">
+        <el-form-item prop="loginname">
           <span class="svg-container">
             <img src="../../assets/login-images/account.png" >
           </span>
           <el-input
-            v-model="loginForm.username"
+            v-model="loginForm.loginname"
             :placeholder="$t('login.username')"
-            name="username"
+            name="loginname"
             type="text"
             auto-complete="on"
             unselectable=""
@@ -37,14 +37,14 @@
             <svg-icon icon-class="eye" />
           </span>
         </el-form-item>
-        <el-form-item prop="verifycode">
+        <el-form-item prop="verificationcode">
           <span class="svg-container">
             <img src="../../assets/login-images/check.png" >
           </span>
           <el-input
-            v-model="loginForm.verifycode"
+            v-model="loginForm.verificationcode"
             :placeholder="$t('login.verifyCode')"
-            name="verifyCode"
+            name="verificationcode"
             type="text"
             auto-complete="on"/>
           <a @click="refreshCode" ><img :src="verifyUrl" class="verify-img" ></a>
@@ -60,10 +60,9 @@
   </div>
 </template>
 <script>
-var verifyCodeUrl = 'http://nj.gynjzx.cn/cas-webapp/auth_image.jsp'
-var currVeriftCodeUrl = verifyCodeUrl
 
 import { isvalidUsername } from '@/utils/validate'
+import { verificationCode } from '@/api/login'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
 export default {
@@ -88,25 +87,23 @@ export default {
     const validateVerifyCode = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入验证码'))
-      } else if (value !== '1234') {
-        console.log('validateVerifycode:', value)
-        callback(new Error('验证码不正确!'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111',
-        verifycode: '1234',
-        verifyUrl: currVeriftCodeUrl
+        loginname: '',
+        password: '',
+        verificationcode: '',
+        temp_token: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        loginname: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        verifycode: [{ required: true, trigger: 'blur', validator: validateVerifyCode }]
+        verificationcode: [{ required: true, trigger: 'blur', validator: validateVerifyCode }]
       },
+      verifyUrl: '',
       passwordType: 'password',
       loading: false,
       showDialog: false,
@@ -134,12 +131,19 @@ export default {
   },
   methods: {
     refreshCode() {
-      var dt = new Date().getTime()
-      // 切换验证码
-      currVeriftCodeUrl = verifyCodeUrl + '?r=' + dt
-      this.verifyUrl = currVeriftCodeUrl
-      this.loading = !this.loading
-      this.loading = !this.loading
+      this.listLoading = true
+      verificationCode().then(response => {
+        if (response.data.code === 0) {
+          var dd = response.data.data
+          this.verifyUrl = 'data:image/jpg;base64,' + dd.image_base64
+          this.loginForm.temp_token = dd.temp_token
+        }
+
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -152,10 +156,13 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+          console.info(this.loginForm)
+          this.$store.dispatch('LoginByUsername', this.loginForm).then((res) => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
+          }).catch((err) => {
+            this.$message(err.msg)
+            this.refreshCode()
             this.loading = false
           })
         } else {
@@ -345,6 +352,8 @@ $block_gray:#000;
     position: absolute;
     right: 60px;
     bottom: 0;
+    height: 33px;
+    width: 90px;
   }
   .change-verify-code{
     position: absolute;float: right;bottom: 0;width: 45px;right: 0;color: #6bce00;
