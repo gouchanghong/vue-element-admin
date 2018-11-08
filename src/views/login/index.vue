@@ -23,12 +23,12 @@
             unselectable=""
           />
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item prop="password_original">
           <span class="svg-container">
             <img src="../../assets/login-images/pwd.png" >
           </span>
           <el-input
-            v-model="loginForm.password"
+            v-model="loginForm.password_original"
             :type="passwordType"
             :placeholder="$t('login.password')"
             name="password"
@@ -51,7 +51,7 @@
           <a type="text" class="change-verify-code" @click="refreshCode">换一张</a>
         </el-form-item>
         <el-form-item>
-          <el-button :loading="loading" type="primary" class="btn-submit" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+          <el-button :loading="loading" type="primary" class="btn-submit" @click.native.prevent="handleLogin" @keyup.enter="handleLogin">{{ $t('login.logIn') }}</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -65,6 +65,7 @@ import { isvalidUsername } from '@/utils/validate'
 import { verificationCode } from '@/api/login'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
+import md5 from 'js-md5'
 export default {
   name: 'Login',
   components: { LangSelect, SocialSign },
@@ -95,6 +96,7 @@ export default {
       loginForm: {
         loginname: '',
         password: '',
+        password_original: '',
         verificationcode: '',
         temp_token: ''
       },
@@ -156,12 +158,16 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          console.info(this.loginForm)
-          this.$store.dispatch('LoginByUsername', this.loginForm).then((res) => {
+          const pass = this.loginForm.password_original
+          this.loginForm.password = md5(pass)
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch((err) => {
-            this.$message(err.msg)
+            this.$message({
+              message: err.msg,
+              type: 'error'
+            })
             this.refreshCode()
             this.loading = false
           })

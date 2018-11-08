@@ -1,5 +1,6 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { loginByUsername, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+// import store from '../index'
 
 const user = {
   state: {
@@ -12,6 +13,7 @@ const user = {
     introduction: '',
     roles: [],
     resources: [], // 所有权限资源信息
+    childResources: {}, // 子分组所有权限资源信息
     setting: {
       articlePlatform: []
     }
@@ -43,21 +45,28 @@ const user = {
       state.roles = roles
     },
     SET_RESOURCES: (state, resources) => {
-      state.roles = resources
+      state.resources = resources
+    },
+    SET_CHILD_RESOURCES: (state, childResources) => {
+      state.childResources = childResources
     }
   },
 
   actions: {
     // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
+    LoginByUsername({ commit, state }, userInfo) {
+      // const resources = []
       return new Promise((resolve, reject) => {
         loginByUsername(userInfo).then(response => {
           const data = response.data
           if (data.code === 0) {
+            const resources = data.data.resources
             commit('SET_TOKEN', data.data.access_token)
-            commit('SET_RESOURCES', data.data.resources)
-            commit('SET_NAME', data.data.name)
+            commit('SET_RESOURCES', resources)
+            commit('SET_CHILD_RESOURCES', resources[0])
+            commit('SET_NAME', data.data.user.name)
             setToken(data.data.access_token)
+
             resolve()
           } else {
             reject(data)
@@ -70,26 +79,37 @@ const user = {
 
     // 获取用户信息
     GetUserInfo({ commit, state }) {
+      if (window.localStorage.getItem('userResources')) {
+        commit('SET_RESOURCES', JSON.parse(window.localStorage.getItem('userResources')))
+      }
+      if (window.localStorage.getItem('userChildResources')) {
+        commit('SET_CHILD_RESOURCES', JSON.parse(window.localStorage.getItem('userChildResources')))
+      }
+      window.localStorage.clear()
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-            reject('error')
-          }
-          const data = response.data
+        // getUserInfo(state.token).then(response => {
+        //   if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+        //     reject('error')
+        //   }
+        const childResources = state.childResources
 
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array !')
-          }
-
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
-        }).catch(error => {
-          reject(error)
+        const roles = []
+        childResources.children.forEach((item, index) => {
+          roles.push(item.nodeattr.path)
         })
+        if (roles && roles.length > 0) { // 验证返回的roles是否是一个非空数组
+          commit('SET_ROLES', roles)
+        } else {
+          reject('getInfo: roles must be a non-null array !')
+        }
+
+        // commit('SET_NAME', data.name)
+        // commit('SET_AVATAR', data.avatar)
+        // commit('SET_INTRODUCTION', data.introduction)
+        resolve(roles)
+        // }).catch(error => {
+        //   reject(error)
+        // })
       })
     },
 
@@ -131,22 +151,33 @@ const user = {
     },
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
+    ChangeRoles({ commit, dispatch }, roles) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', role)
-        setToken(role)
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
-          resolve()
-        })
+        // commit('SET_TOKEN', roles)
+        // setToken(roles)
+        // getUserInfo(role).then(response => {
+        // const roles = store.getters.roles // response.data
+        commit('SET_ROLES', roles)
+        // commit('SET_NAME', data.name)
+        // commit('SET_AVATAR', data.avatar)
+        // commit('SET_INTRODUCTION', data.introduction)
+        dispatch('GenerateRoutes', { roles }) // 动态修改权限后 重绘侧边菜单
+        resolve()
+        // })
       })
+    },
+    // 设置权限
+    SetRole({ commit }, roles) {
+      commit('SET_ROLES', roles)
+    },
+    // 设置权限
+    SetResources({ commit }, resouces) {
+      commit('SET_RESOURCES', resouces)
+    },
+    // 设置子分组资源
+    SetChildResources({ commit }, childResources) {
+      commit('SET_CHILD_RESOURCES', childResources)
     }
   }
 }
-
 export default user

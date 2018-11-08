@@ -6,7 +6,7 @@
       <div class="admin-option">
         <div>
           <img src="../../../static/welcome-images/admin.png" >
-          <a>系统管理员{{ name }}</a>
+          <a>系统管理员</a>
         </div>
         <div>
           <img src="../../../static/welcome-images/pwd.png" >
@@ -18,19 +18,19 @@
         </div>
       </div>
       <div class="nav-tabs">
-        <a v-for="(p,index) in tabLists" :key="index" :class="p.selected ? 'active' : ''" class="tab" @click="changeActive(index)">
-          <div class="title">{{ p.title }}</div>
+        <a v-for="(p,index) in tabLists" :key="index" :class="index === currentIndex ? 'active' : ''" class="tab" @click="changeActive(index)">
+          <div class="title">{{ p.nodename }}</div>
           <div class="subtitle">{{ p.subtitle }}</div>
         </a>
       </div>
     </div>
     <div class="el-row down" >
-      <div v-for="(parent,pIndex) in tabLists" :key="pIndex" :class="parent.selected ? 'show' : 'hide'" class="parent">
-        <a v-for="(child,childIndex) in parent.children" :key="childIndex" class="child" @click="redirect(child.url)">
+      <div v-for="(parent,pIndex) in tabLists" :key="pIndex" :class="pIndex === currentIndex ? 'show' : 'hide'" class="parent">
+        <a v-for="(child,childIndex) in parent.children" :key="childIndex" class="child" @click="redirect(child.nodeattr.path,pIndex,childIndex)">
           <div class="img">
-            <img :src="child.img" >&nbsp;
+            <img :src="child.nodeicon" >&nbsp;
           </div>
-          <div class="tb-title">{{ child.name }}&nbsp;</div>
+          <div class="tb-title">{{ child.nodename }}&nbsp;</div>
         </a>
       </div>
     </div>
@@ -48,34 +48,14 @@ export default {
   },
   data() {
     return {
+      currentIndex: 0,
+      currentPIndex: 0,
       passwordChangeDialogVisible: false,
-      tabLists: [
-        { title: '基础平台', subtitle: '基础管理 区域服务', selected: true, children:
-            [
-              { 'name': '基础注册', 'img': '../../../static/welcome-images/zc.png', url: 'dashboard' },
-              { 'name': '权限管理', 'img': '../../../static/welcome-images/qx.png', url: 'permission/page' }
-            ]
-        },
-        { title: '数据中心', subtitle: '数据分析 统计管理', selected: false, children:
-            [
-              // { 'name': '基础注册', 'img': 'zc.png' },
-              // { 'name': '权限管理', 'img': 'qx.png' }
-            ]
-        },
-        { title: '业务应用', subtitle: '业务管理 应用中心', selected: false, children:
-            [
-              // { 'name': '基础注册', 'img': 'zc.png' },
-              // { 'name': '权限管理', 'img': 'qx.png' }
-            ]
-        },
-        { title: '综合监督', subtitle: '综合服务 监督管理', selected: false, children:
-            [
-              // { 'name': '基础注册', 'img': 'zc.png' },
-              // { 'name': '权限管理', 'img': 'qx.png' }
-            ]
-        }
-      ]
+      tabLists: []
     }
+  },
+  computed: {
+    //
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
@@ -84,32 +64,36 @@ export default {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   mounted() {
+    // 后台数据 测试中注释掉
+    // this.$store.dispatch('SetResources', this.tabLists)
+    this.tabLists = this.$store.getters.resources
     this.changeActive(0)
   },
   methods: {
-    userInfo() {
-      this.$store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-        const roles = res.data.roles // note: roles must be a array! such as: ['editor','develop']
-        this.$store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
-          this.$router.addRoutes(this.$store.getters.addRouters) // 动态添加可访问路由表
-          // this.$next() // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-        })
-      })
-    },
     changeActive(index) {
-      for (var i = 0; i < this.tabLists.length; i++) {
-        this.tabLists[i].selected = false
-      }
-      this.tabLists[index].selected = true
+      this.currentIndex = index
+      const childResources = this.tabLists[index].children
+
+      this.$store.dispatch('SetChildResources', childResources)
     },
-    redirect(url) {
+    redirect: function(url, pIndex, cIndex) {
+      const selectNode = this.tabLists[pIndex].children[cIndex]
+      const children = selectNode.children
+      const roles = []
+      children.forEach((item, index) => {
+        const path = item.nodeattr.path
+        roles.push(path)
+      })
+      this.$store.dispatch('setSystemName', selectNode.nodename)
+
+      this.$store.dispatch('ChangeRoles', roles)
+
       this.$router.push({ path: url })
     },
     togglePasswordChangeDialog() {
       this.$store.dispatch('togglePasswordChangeDialog')
     },
     toggleLogoutConfirmDialog() {
-      console.info('2222222222222')
       this.$store.dispatch('toggleLogoutConfirmDialog')
     }
   }

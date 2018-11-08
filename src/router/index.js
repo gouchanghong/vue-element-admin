@@ -122,14 +122,14 @@ export const asyncRouterMap = [
     redirect: '/search-org/list',
     name: 'search-org',
     meta: {
-      title: '机构查询'
+      title: '机构查询', roles: ['/search-org']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/basicRegistration/SearchOrg'),
         name: 'search-org-list',
-        meta: { title: '机构查询', icon: 'documentation' }
+        meta: { title: '机构查询', icon: 'documentation', roles: ['/search-org'] }
       }
     ]
   },
@@ -139,14 +139,14 @@ export const asyncRouterMap = [
     redirect: '/search-dept/list',
     name: 'search-dept',
     meta: {
-      title: '机构查询'
+      title: '机构查询', roles: ['/search-dept']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/basicRegistration/SearchDept'),
         name: 'search-dept-list',
-        meta: { title: '部门查询', icon: 'documentation' }
+        meta: { title: '部门查询', icon: 'documentation', roles: ['/search-dept'] }
       }
     ]
   },
@@ -156,14 +156,14 @@ export const asyncRouterMap = [
     redirect: '/search-user/list',
     name: 'search-user',
     meta: {
-      title: '机构查询'
+      title: '机构查询', roles: ['/search-user']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/basicRegistration/SearchUser'),
         name: 'search-user-list',
-        meta: { title: '人员查询', icon: 'documentation' }
+        meta: { title: '人员查询', icon: 'documentation', roles: ['/search-user'] }
       }
     ]
   },
@@ -175,14 +175,14 @@ export const asyncRouterMap = [
     redirect: '/manage-user/list',
     name: 'manage-user',
     meta: {
-      title: '用户管理'
+      title: '用户管理', roles: ['/manage-user']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/authorManage/ManageUser'),
         name: 'manage-user-list',
-        meta: { title: '用户管理', icon: 'documentation' }
+        meta: { title: '用户管理', icon: 'documentation', roles: ['/manage-user'] }
       }
     ]
   },
@@ -193,14 +193,14 @@ export const asyncRouterMap = [
     redirect: '/manage-role/list',
     name: 'manage-role',
     meta: {
-      title: '角色管理'
+      title: '角色管理', roles: ['/manage-role']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/authorManage/ManageRole'),
         name: 'manage-role-list',
-        meta: { title: '角色管理', icon: 'documentation' }
+        meta: { title: '角色管理', icon: 'documentation', roles: ['/manage-role'] }
       }
     ]
   },
@@ -211,14 +211,14 @@ export const asyncRouterMap = [
     redirect: '/manage-resource/list',
     name: 'manage-resource',
     meta: {
-      title: '资源管理'
+      title: '资源管理', roles: ['/manage-resource']
     },
     children: [
       {
         path: 'list',
         component: () => import('@/views/authorManage/ManageResource'),
         name: 'manage-role-list',
-        meta: { title: '资源管理', icon: 'documentation' }
+        meta: { title: '资源管理', icon: 'documentation', roles: ['/manage-resource'] }
       }
     ]
   },

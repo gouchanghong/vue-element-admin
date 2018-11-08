@@ -6,8 +6,6 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import user from './modules/user'
 import getters from './getters'
-import md5 from 'js-md5'
-Vue.prototype.$md5 = md5
 
 Vue.use(Vuex)
 

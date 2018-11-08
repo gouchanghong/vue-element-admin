@@ -10,12 +10,12 @@ export function verificationCode() {
 
 // 登录校验
 export function loginByUsername(data) {
-  const dd = data
-  dd.password = this.$md5(data.password)
+  // const dd = data
+  // dd.password = this.$md5(data.password)
   return request({
     url: '/auth/login',
     method: 'post',
-    dd
+    data
   })
 }
 // 退出登录
