@@ -1,18 +1,20 @@
 <template>
   <div class="container">
+    <password-change/>
+    <logout-confirm/>
     <div class="el-row up">
       <div class="admin-option">
         <div>
           <img src="../../../static/welcome-images/admin.png" >
-          <a @click="userInfo">系统管理员</a>
+          <a>系统管理员{{ name }}</a>
         </div>
         <div>
           <img src="../../../static/welcome-images/pwd.png" >
-          <a @click="modifyPwd">修改密码</a>
+          <a @click="togglePasswordChangeDialog">{{ $t('navbar.changePassword') }}</a>
         </div>
         <div>
           <img src="../../../static/welcome-images/logout.png" >
-          <a @click="logout">{{ $t('navbar.logOut') }}</a>
+          <a @click="toggleLogoutConfirmDialog">{{ $t('navbar.logOut') }}</a>
         </div>
       </div>
       <div class="nav-tabs">
@@ -35,11 +37,18 @@
   </div>
 </template>
 <script>
+import PasswordChange from '@/components/PasswordChange'
+import LogoutConfirm from '@/components/LogoutConfirm'
 
 export default {
   name: 'Welcome',
+  components: {
+    PasswordChange,
+    LogoutConfirm
+  },
   data() {
     return {
+      passwordChangeDialogVisible: false,
       tabLists: [
         { title: '基础平台', subtitle: '基础管理 区域服务', selected: true, children:
             [
@@ -87,14 +96,6 @@ export default {
         })
       })
     },
-    modifyPwd() {
-      alert('modify')
-    },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
-    },
     changeActive(index) {
       for (var i = 0; i < this.tabLists.length; i++) {
         this.tabLists[i].selected = false
@@ -103,6 +104,13 @@ export default {
     },
     redirect(url) {
       this.$router.push({ path: url })
+    },
+    togglePasswordChangeDialog() {
+      this.$store.dispatch('togglePasswordChangeDialog')
+    },
+    toggleLogoutConfirmDialog() {
+      console.info('2222222222222')
+      this.$store.dispatch('toggleLogoutConfirmDialog')
     }
   }
 }

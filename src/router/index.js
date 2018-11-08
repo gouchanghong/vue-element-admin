@@ -186,6 +186,42 @@ export const asyncRouterMap = [
       }
     ]
   },
+
+  {
+    path: '/manage-role',
+    component: Layout,
+    redirect: '/manage-role/list',
+    name: 'manage-role',
+    meta: {
+      title: '角色管理'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/authorManage/ManageRole'),
+        name: 'manage-role-list',
+        meta: { title: '角色管理', icon: 'documentation' }
+      }
+    ]
+  },
+
+  {
+    path: '/manage-resource',
+    component: Layout,
+    redirect: '/manage-resource/list',
+    name: 'manage-resource',
+    meta: {
+      title: '资源管理'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/authorManage/ManageResource'),
+        name: 'manage-role-list',
+        meta: { title: '资源管理', icon: 'documentation' }
+      }
+    ]
+  },
   /** 权限管理菜单 end**/
   {
     path: '/permission',

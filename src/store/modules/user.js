@@ -11,6 +11,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
+    resources: [], // 所有权限资源信息
     setting: {
       articlePlatform: []
     }
@@ -40,19 +41,27 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_RESOURCES: (state, resources) => {
+      state.roles = resources
     }
   },
 
   actions: {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
+        loginByUsername(userInfo).then(response => {
           const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
-          resolve()
+          if (data.code === 0) {
+            commit('SET_TOKEN', data.data.access_token)
+            commit('SET_RESOURCES', data.data.resources)
+            commit('SET_NAME', data.data.name)
+            setToken(data.data.access_token)
+            resolve()
+          } else {
+            reject(data)
+          }
         }).catch(error => {
           reject(error)
         })
