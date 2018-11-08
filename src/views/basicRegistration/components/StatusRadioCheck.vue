@@ -1,7 +1,7 @@
 <template>
   <div class="radio-inline">
     <span>状态：</span>
-    <el-radio-group v-model="statusRadio">
+    <el-radio-group v-model="statusRadio" @change="sendStatus">
       <el-radio :label="'all'">全部</el-radio>
       <el-radio :label="0">停用</el-radio>
       <el-radio :label="1">启用</el-radio>
@@ -14,6 +14,14 @@ export default {
   data() {
     return {
       statusRadio: 'all'
+    }
+  },
+  methods: {
+    sendStatus(val) {
+      this.$emit('getStatus', val) // 第一参数自定义事件，第二参数就是传递消息
+    },
+    reset() {
+      this.statusRadio = 'all'
     }
   }
 }

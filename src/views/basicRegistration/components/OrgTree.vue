@@ -7,78 +7,53 @@
       class="orgTreeInput"/>
 
     <el-tree
-      ref="tree2"
-      :data="data2"
+      ref="orgTree"
+      :data="data"
       :props="defaultProps"
       :filter-node-method="filterNode"
       :expand-on-click-node="false"
       accordion
+      node-key="nodeid"
       class="filter-tree orgTreeElDiv"
       @node-click="sendOrgCode"/>
   </div>
 </template>
 <script>
+
+import { getOrgTree } from '@/api/basicRegistration'
+
 export default {
 
   data() {
     return {
       filterText: '',
       img: { background: "url('../../../static/imgs/search-1.png')" },
-      data2: [{
-        id: 1,
-        label: 'Ho',
-        children: [{
-          id: 4,
-          label: 'Cl',
-          children: [{
-            id: 9,
-            label: 'Jh'
-          }, {
-            id: 10,
-            label: 'Fu'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      data: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'nodename'
       }
     }
   },
   watch: {
     filterText(val) {
-      this.$refs.tree2.filter(val)
+      this.$refs.orgTree.filter(val)
     }
+  },
+  created() {
+    getOrgTree().then(response => {
+      this.data = response.data.data
+    })
   },
 
   methods: {
     filterNode(value, data) {
       if (!value) return true
-      return data.label.indexOf(value) !== -1
+      return data.nodename.indexOf(value) !== -1
     },
 
     sendOrgCode(data) {
-      this.$emit('getOrgCode', data.label) // 第一参数自定义事件，第二参数就是传递消息
+      this.$emit('getOrgId', data.nodeid) // 第一参数自定义事件，第二参数就是传递消息
     }
   }
 }
