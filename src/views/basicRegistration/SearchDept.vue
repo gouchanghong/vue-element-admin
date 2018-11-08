@@ -1,14 +1,14 @@
 <template>
   <div style="display: inline;">
-    <org-tree style="position: fixed; top:70px;" @getOrgCode="handleFilterByOrgCode" />
+    <org-tree style="position: fixed; top:70px;" @getOrgId="handleFilterByOrgId" />
     <div class="app-container searchDeptDiv">
       <div class="filter-container">
-        <status-radio-check style="margin-left: 18px;"/>
+        <status-radio-check ref="searchDeptStatus" style="margin-left: 18px;" @getStatus="changeStatus"/>
         <span style="margin-left: 50px;">查询：</span>
-        <el-input :placeholder="$t('basicRegistration.searchPlaceholder')" v-model="listQuery.author" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+        <el-input :placeholder="$t('basicRegistration.searchDeptPlaceholder')" v-model="condition" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
         <el-button v-waves class="filter-item" style="margin-left: 6px;" type="primary" @click="handleFilter">{{ $t('table.search') }}</el-button>
         <div style="float: right; margin-right: 20px;">
-          <el-button class="filter-item" style="background-color: #7D83FE; border-color: #7D83FE;" type="primary" @click="handleFilter">{{ $t('table.refresh') }}</el-button>
+          <el-button class="filter-item" style="background-color: #7D83FE; border-color: #7D83FE;" type="primary" @click="handleRefresh">{{ $t('table.refresh') }}</el-button>
           <el-button v-waves :loading="downloadLoading" class="filter-item" style="background-color: #FFA45A; border-color: #FFA45A;" type="primary" @click="handleDownload">{{ $t('table.export') }}</el-button>
           <el-button class="filter-item" style="background-color: #01E19F; border-color: #01E19F;" type="primary" @click="handleAdvanced">{{ $t('table.advancedQuery') }}</el-button>
         </div>
@@ -23,64 +23,44 @@
         fit
         highlight-current-row
         style="width: 100%;">
-        <el-table-column :label="$t('basicRegistration.belongOrgName')" min-width="200px" align="center">
+        <el-table-column :label="$t('basicRegistration.belongorgname')" min-width="200px" align="center">
           <template slot-scope="scope">
-            <span style="color: #32A8EE;">{{ scope.row.author }}</span>
+            <span style="color: #32A8EE;">{{ scope.row.orgname }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('basicRegistration.belongOfficeName')" min-width="200px" align="center">
+        <el-table-column :label="$t('basicRegistration.deptname')" min-width="200px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
+            <span>{{ scope.row.deptname }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('basicRegistration.name')" min-width="100px" align="center">
+        <el-table-column :label="$t('basicRegistration.deptcode')" min-width="100px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
+            <span>{{ scope.row.deptcode }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('basicRegistration.jobNum')" min-width="100px" align="center">
+        <el-table-column :label="$t('basicRegistration.standarddeptname')" min-width="100px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
+            <span>{{ scope.row.standarddeptname }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('basicRegistration.birthday')" min-width="100px" align="center">
+        <el-table-column :label="$t('basicRegistration.parentdeptname')" min-width="200px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d}') }}</span>
+            <span>{{ scope.row.parentdeptname }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('basicRegistration.IDNO')" min-width="200px" align="center">
+        <el-table-column :label="$t('basicRegistration.contactnumber')" min-width="100px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('basicRegistration.political')" min-width="100px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('basicRegistration.educationBackground')" min-width="100px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('basicRegistration.postCategory')" min-width="130px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('basicRegistration.personType')" min-width="130px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.author }}</span>
+            <span>{{ scope.row.contactnumber }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('basicRegistration.status')" class-name="status-col" min-width="60px">
           <template slot-scope="scope">
-            <span :class="scope.row.author == 'Joseph'? classEnable : classDisable ">{{ scope.row.author }}</span>
+            <span :class="scope.row.validtag == '1'? classEnable : classDisable ">{{ scope.row.validtag == '1'? '启用' : '停用' }}</span>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination :total="total" :pager-count="11" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+      <pagination :total="total" :pager-count="11" :page.sync="page" :limit.sync="limit" @pagination="getList" />
 
       <el-dialog :title="advancedQueryTitle" :visible.sync="advancedQueryFormVisible" class="searchDeptAdvancedQueryDivDialog" width="800px">
         <el-form ref="advancedQueryForm" :model="advancedQueryForm" label-position="right" label-width="70px" style="width: 700px; margin-left:30px;">
@@ -116,7 +96,7 @@
 import OrgTree from './components/OrgTree'
 import StatusRadioCheck from './components/StatusRadioCheck'
 
-import { fetchList } from '@/api/article'
+import { findDeptByPage } from '@/api/basicRegistration'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -130,33 +110,24 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
+      page: 1,
+      limit: 10,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 10,
-        importance: undefined,
-        author: undefined,
-        type: undefined,
-        sort: '+id'
-      },
+      orgId: undefined,
+      status: 'all',
+      condition: undefined,
       fieldOptions: [{
-        value: 'loginname',
-        label: '登录名'
+        value: 'deptcode',
+        label: '科室代码'
       }, {
-        value: 'name',
-        label: '姓名'
+        value: 'standarddeptname',
+        label: '标准科室'
       }, {
-        value: 'idnumber',
-        label: '身份证号'
+        value: 'parentdeptname',
+        label: '上级科室名称'
       }, {
-        value: 'sex',
-        label: '性别'
-      }, {
-        value: 'email',
-        label: '电子邮箱'
-      }, {
-        value: 'phonenumber',
-        label: '手机号码'
+        value: 'contactnumber',
+        label: '联系电话'
       }],
       advancedQueryForm: {
         cs: [{
@@ -189,32 +160,57 @@ export default {
     this.getList()
   },
   methods: {
-    resize() {
-      console.log('resize')
+    changeStatus: function(status) {
+      this.status = status
     },
     getList() {
+      this.cs = []
+      if (this.orgId) {
+        this.cs.push({ f: 'orgId', o: 'EQ', v: this.orgId })
+      }
+      if (this.status) {
+        this.cs.push({ f: 'validtag', o: 'EQ', v: this.status })
+      }
+      if (this.condition) {
+        this.cs.push({ f: 'deptname', o: 'LIKE', v: this.condition })
+      }
+      if (this.advancedQueryForm.cs && this.advancedQueryForm.cs[0].f) {
+        this.cs = this.cs.concat(this.advancedQueryForm.cs)
+      }
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      findDeptByPage(this.page, this.limit, this.cs).then(response => {
+        this.list = response.data.data.rows
+        this.total = response.data.data.total
+        this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.page = 1
       this.getList()
     },
-    handleFilterByOrgCode: function(orgCode) {
-      this.listQuery.page = 1
-      this.listQuery.author = orgCode
+    handleRefresh() {
+      this.page = 1
+      this.limit = 10
+      this.orgId = undefined
+      this.status = 'all'
+      this.$refs.searchDeptStatus.reset()
+      this.condition = undefined
+      this.advancedQueryForm = {
+        cs: [{
+          f: undefined,
+          o: 'EQ',
+          v: undefined
+        }]
+      }
+      this.getList()
+    },
+    handleFilterByOrgId: function(orgId) {
+      this.page = 1
+      this.orgId = orgId
       this.getList()
     },
     handleAdvancedQuery() {
-      this.listQuery.page = 1
+      this.page = 1
       this.getList()
       this.advancedQueryFormVisible = false
     },
