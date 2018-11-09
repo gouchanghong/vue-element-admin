@@ -84,7 +84,6 @@ const user = {
       }
       if (window.localStorage.getItem('userChildResources')) {
         commit('SET_CHILD_RESOURCES', JSON.parse(window.localStorage.getItem('userChildResources')))
-        console.info(window.localStorage.getItem('userChildResources'), state.childResources)
       }
       window.localStorage.clear()
       return new Promise((resolve, reject) => {
@@ -96,10 +95,8 @@ const user = {
 
         const roles = []
         childResources.children.forEach((item, index) => {
-          console.info(item)
           roles.push(item.nodeattr.path)
         })
-        console.info(roles)
         if (roles && roles.length > 0) { // 验证返回的roles是否是一个非空数组
           commit('SET_ROLES', roles)
         } else {
@@ -165,7 +162,7 @@ const user = {
         // commit('SET_AVATAR', data.avatar)
         // commit('SET_INTRODUCTION', data.introduction)
         dispatch('GenerateRoutes', { roles }) // 动态修改权限后 重绘侧边菜单
-        resolve()
+        resolve(roles)
         // })
       })
     },

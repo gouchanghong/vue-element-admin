@@ -66,27 +66,39 @@ export default {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   mounted() {
-    // 后台数据 测试中注释掉
-    // this.$store.dispatch('SetResources', this.tabLists)
   },
   methods: {
-    changeActive(index) {
+    changeActive(index, cIndex) {
       this.currentIndex = index
-      const childResources = this.tabLists[index]
+      let selectNode = this.tabLists[index]
+      if (cIndex !== undefined) {
+        selectNode = selectNode.children[cIndex]
+      }
 
-      this.$store.dispatch('SetChildResources', childResources)
-    },
-    redirect: function(url, pIndex, cIndex) {
-      const selectNode = this.tabLists[pIndex].children[cIndex]
       const children = selectNode.children
       const roles = []
-      children.forEach((item, index) => {
+      this.getRoles(roles, children)
+      this.$store.dispatch('setSystemName', selectNode.nodename)
+      this.$store.dispatch('SetChildResources', selectNode)
+
+      this.$store.dispatch('ChangeRoles', roles).then(() => { // 根据roles权限生成可访问的路由表
+        const routerData = this.$store.getters.addRouters
+        this.$router.addRoutes(routerData) // 动态添加可访问路由表
+      })
+    },
+    getRoles: function(roles, children) {
+      children.forEach((item) => {
         const path = item.nodeattr.path
         roles.push(path)
+        // if (item.children && item.children.length > 0) {
+        //   this.getRoles(roles, item.children)
+        // }
       })
-      this.$store.dispatch('setSystemName', selectNode.nodename)
-
-      this.$store.dispatch('ChangeRoles', roles)
+    },
+    redirect: function(url, pIndex, cIndex) {
+      this.changeActive(pIndex, cIndex)
+      console.info(this.$store.getters.childResources)
+      console.info(this.$store.getters.roles)
 
       this.$router.push({ path: url })
     },

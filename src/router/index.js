@@ -231,7 +231,7 @@ export const asyncRouterMap = [
     meta: {
       title: 'permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['search-user', 'manage-user'] // you can set roles in root nav
     },
     children: [
       {
@@ -240,7 +240,7 @@ export const asyncRouterMap = [
         name: 'PagePermission',
         meta: {
           title: 'pagePermission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['search-user', 'manage-user'] // or you can only set roles in sub nav
         }
       },
       {
