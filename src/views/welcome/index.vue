@@ -97,9 +97,6 @@ export default {
     },
     redirect: function(url, pIndex, cIndex) {
       this.changeActive(pIndex, cIndex)
-      console.info(this.$store.getters.childResources)
-      console.info(this.$store.getters.roles)
-
       this.$router.push({ path: url })
     },
     togglePasswordChangeDialog() {

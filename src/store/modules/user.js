@@ -63,7 +63,7 @@ const user = {
             const resources = data.data.resources
             commit('SET_TOKEN', data.data.access_token)
             commit('SET_RESOURCES', resources)
-            commit('SET_CHILD_RESOURCES', resources[0] || ['admin'])
+            commit('SET_CHILD_RESOURCES', resources[0] || ['error'])
             commit('SET_NAME', data.data.user.name)
             setToken(data.data.access_token)
 
@@ -167,7 +167,7 @@ const user = {
       })
     },
     // 设置权限
-    SetRole({ commit }, roles) {
+    SetRoles({ commit }, roles) {
       commit('SET_ROLES', roles)
     },
     // 设置权限

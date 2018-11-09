@@ -26,7 +26,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <div style="float: right;" class="right-menu-item">
-          <a @click="toggleLogoutConfirmDialog">
+          <a href="">
             <img src="../../../../static/welcome-images/close.png" style="width: 22px; height: 24px;">
           </a>
         </div>
@@ -73,7 +73,6 @@ export default {
       this.$store.dispatch('togglePasswordChangeDialog')
     },
     toggleLogoutConfirmDialog() {
-      console.info('2222222222222')
       this.$store.dispatch('toggleLogoutConfirmDialog')
     }
   }
