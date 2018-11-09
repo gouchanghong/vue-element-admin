@@ -59,6 +59,8 @@ export default {
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
+    this.tabLists = this.$store.getters.resources
+    this.changeActive(0)
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -66,13 +68,11 @@ export default {
   mounted() {
     // 后台数据 测试中注释掉
     // this.$store.dispatch('SetResources', this.tabLists)
-    this.tabLists = this.$store.getters.resources
-    this.changeActive(0)
   },
   methods: {
     changeActive(index) {
       this.currentIndex = index
-      const childResources = this.tabLists[index].children
+      const childResources = this.tabLists[index]
 
       this.$store.dispatch('SetChildResources', childResources)
     },

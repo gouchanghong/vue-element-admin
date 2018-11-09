@@ -63,7 +63,7 @@ const user = {
             const resources = data.data.resources
             commit('SET_TOKEN', data.data.access_token)
             commit('SET_RESOURCES', resources)
-            commit('SET_CHILD_RESOURCES', resources[0])
+            commit('SET_CHILD_RESOURCES', resources[0] || ['admin'])
             commit('SET_NAME', data.data.user.name)
             setToken(data.data.access_token)
 
@@ -84,6 +84,7 @@ const user = {
       }
       if (window.localStorage.getItem('userChildResources')) {
         commit('SET_CHILD_RESOURCES', JSON.parse(window.localStorage.getItem('userChildResources')))
+        console.info(window.localStorage.getItem('userChildResources'), state.childResources)
       }
       window.localStorage.clear()
       return new Promise((resolve, reject) => {
@@ -95,8 +96,10 @@ const user = {
 
         const roles = []
         childResources.children.forEach((item, index) => {
+          console.info(item)
           roles.push(item.nodeattr.path)
         })
+        console.info(roles)
         if (roles && roles.length > 0) { // 验证返回的roles是否是一个非空数组
           commit('SET_ROLES', roles)
         } else {
