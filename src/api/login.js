@@ -21,7 +21,7 @@ export function loginByUsername(data) {
 // 退出登录
 export function logout() {
   return request({
-    url: '/login/logout',
+    url: '/auth/logout',
     method: 'post'
   })
 }

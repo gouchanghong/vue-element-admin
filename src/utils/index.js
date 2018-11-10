@@ -289,3 +289,49 @@ export function uniqueArr(arr) {
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
+
+/**
+ * cs: [{
+    f: undefined,
+    o: 'EQ',
+    v: undefined
+  }]
+ ss: [{
+    f: undefined,
+    o: 'EQ'
+  }]
+ * 高级查询
+ * @param params
+ * @returns {*}
+ */
+export function advancedQuery(params) {
+  if (!params) {
+    return null
+  }
+  if (params.length === 0) {
+    return null
+  }
+
+  const pp = []
+  params.cs.forEach((item, index) => {
+    if (item.f && item.v) {
+      let p = 'cs[' + index + '].f=' + item.f
+      p += 'cs[' + index + '].o=' + item.o
+      let vv = item.v
+      vv = vv.replace('，', ',')
+      const vvs = vv.split(',')
+      vvs.forEach((vs, i) => {
+        p += 'cs[' + index + '].v[' + i + ']=' + vs
+      })
+      pp.push(p)
+    }
+  })
+  params.ss.forEach((item, index) => {
+    if (item.f && item.o) {
+      let p = 'ss[' + index + '].f=' + item.f
+      p += 'ss[' + index + '].o=' + item.o
+      pp.push(p)
+    }
+  })
+  return pp.join('&')
+}

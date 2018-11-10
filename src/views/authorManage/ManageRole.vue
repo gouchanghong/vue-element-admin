@@ -10,15 +10,15 @@
         </div>
       </div>
       <div>
-        <div v-for="(role,index) in roleList" :key="index" class="roles" @click="selectRole(role)">
+        <div v-loading="listLoading" v-for="(role,index) in roleList" :key="index" class="roles" @click="selectRole(role)">
           <div :class="role == currentRole ? 'active' : ''">
-            <div><img :src="role.img" ></div>
-            <div>{{ role.name }}</div>
+            <div><img :src="role.path" ></div>
+            <div>{{ role.rolename }}</div>
           </div>
         </div>
       </div>
     </div>
-    <org-tree style="position: fixed; margin-left: 370px;margin-top: 10px;width: 100%;" />
+    <resource-tree ref="resourcesTree" style="position: fixed; margin-left: 370px;margin-top: 10px;width: 100%;" />
 
     <el-dialog :title="createOrUpdateTextMap[createOrUpdateStatus]" :visible.sync="createOrUpdateFormVisible" class="manageUserCreateOrUpdateDivDialog" width="500px">
       <el-form ref="createOrUpdateForm" :rules="createOrUpdateRules" :model="createOrUpdateModel" label-position="right" label-width="70px" style="width: 400px; margin-left:30px;">
@@ -41,20 +41,27 @@
   </div>
 </template>
 <script>
-import OrgTree from './components/OrgTree'
-import { createArticle, updateArticle } from '@/api/article'
+import ResourceTree from './components/ResourceTree'
+import { advancedQuery } from '@/utils'
+import { getRoleList, saveRole, updateRole, deleteRole } from '@/api/authorManage'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 
 export default {
   name: 'ManageRole',
-  components: { OrgTree },
+  components: { ResourceTree, Pagination },
   directives: { waves },
   data() {
     return {
+      total: 0,
+      page: 1,
+      limit: 0,
+      listLoading: true,
+      status: 'all',
       currentRole: null,
       roleList: [
-        { 'name': '机构管理员', 'img': '../../../static/imgs/manage-org.png', url: 'dashboard' },
-        { 'name': '系统管理员', 'img': '../../../static/imgs/manage-sys.png', url: 'permission' }
+        // { 'id': '1', 'rolename': '机构管理员', 'path': '../../../static/imgs/manage-org.png', url: 'dashboard' },
+        // { 'id': '2', 'rolename': '系统管理员', 'path': '../../../static/imgs/manage-sys.png', url: 'permission' }
       ],
       fieldOptions: [{
         value: 'rolename',
@@ -73,15 +80,27 @@ export default {
         create: '新增'
       },
       createOrUpdateModel: {
-        id: 1,
+        id: null,
         rolename: '',
         remarks: ''
+      },
+      advancedQueryForm: {
+        cs: [{
+          f: undefined,
+          o: 'EQ',
+          v: undefined
+        }],
+        ss: [{
+          f: undefined,
+          o: undefined
+        }]
       }
     }
   },
   computed: {
   },
   created() {
+    this.getList()
   },
   methods: {
     resetModel() {
@@ -92,25 +111,41 @@ export default {
     },
     selectRole(role) {
       this.currentRole = role
+      this.createOrUpdateModel = role
+      this.$refs['resourcesTree'].getResource(role.id)
     },
     handleRefresh() {
+      this.getList()
       this.$message('刷新成功')
+    },
+    getList() {
+      this.advancedQueryForm.cs = []
+      this.advancedQueryForm.ss = []
+      // if (this.orgId) {
+      //   this.advancedQueryForm.push({ f: 'orgId', o: 'EQ', v: this.orgId })
+      // }
+      this.listLoading = true
+      const param = advancedQuery(this.advancedQueryForm)
+      getRoleList(param, this.page, this.limit).then(response => {
+        this.roleList = response.data.data.rows
+        this.total = response.data.data.total
+        this.listLoading = false
+        if (this.roleList && this.roleList.length > 0) {
+          this.selectRole(this.roleList[0])
+        }
+      })
     },
     handleCreate() {
       this.resetModel()
       this.createOrUpdateStatus = 'create'
       this.createOrUpdateFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['createOrUpdateForm'].clearValidate()
-      })
+      this.$nextTick(() => this.$refs['createOrUpdateForm'].clearValidate())
     },
     handleUpdate() {
       // TODO 调用查询某个角色的API
       this.createOrUpdateStatus = 'update'
       this.createOrUpdateFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['createOrUpdateForm'].clearValidate()
-      })
+      this.$nextTick(() => this.$refs['createOrUpdateForm'].clearValidate())
     },
     handleDelete() {
       if (!this.currentRole) {
@@ -123,28 +158,30 @@ export default {
         type: 'warning'
       }).then(() => {
         // TODO 调用注销API
-        this.$message({
-          type: 'success',
-          message: '删除成功'
+        deleteRole(this.createOrUpdateModel.id).then((resp) => {
+          if (resp.data.code === 0) {
+            this.roleList.splice(this.roleList.indexOf(this.currentRole, 1))
+            this.$message({ message: '删除成功', type: 'success' })
+          } else {
+            this.$message({ message: resp.data.msg, type: 'error' })
+          }
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.$message({ type: 'info', message: '已取消删除' })
       })
     },
     createData() {
       this.$refs['createOrUpdateForm'].validate((valid) => {
         if (valid) {
           // TODO 调用新增API
-          createArticle(this.createOrUpdateModel).then(() => {
-            this.list.unshift(this.createOrUpdateModel)
-            this.createOrUpdateFormVisible = false
-            this.$message({
-              message: '创建成功',
-              type: 'success'
-            })
+          saveRole(this.createOrUpdateModel).then((resp) => {
+            if (resp.data.code === 0) {
+              this.roleList.unshift(this.createOrUpdateModel)
+              this.createOrUpdateFormVisible = false
+              this.$message({ message: '创建成功', type: 'success' })
+            } else {
+              this.$message({ message: resp.data.msg, type: 'error' })
+            }
           })
         }
       })
@@ -153,19 +190,20 @@ export default {
       this.$refs['createOrUpdateForm'].validate((valid) => {
         if (valid) {
           // TODO 调用修改API
-          updateArticle(this.createOrUpdateModel).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.createOrUpdateModel.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.createOrUpdateModel)
-                break
+          updateRole(this.createOrUpdateModel).then((resp) => {
+            if (resp.data.code === 0) {
+              for (const v of this.roleList) {
+                if (v.id === this.createOrUpdateModel.id) {
+                  const index = this.roleList.indexOf(v)
+                  this.roleList.splice(index, 1, this.createOrUpdateModel)
+                  break
+                }
               }
+              this.createOrUpdateFormVisible = false
+              this.$message({ message: '更新成功', type: 'success' })
+            } else {
+              this.$message({ message: resp.data.msg, type: 'error' })
             }
-            this.createOrUpdateFormVisible = false
-            this.$message({
-              message: '更新成功',
-              type: 'success'
-            })
           })
         }
       })
