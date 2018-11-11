@@ -26,7 +26,7 @@ export default {
   components: { SidebarItem },
   data() {
     return {
-      logoUrl: '../../../static/imgs/basicRegistration-logo.png'
+      logoUrl: '/images/basicRegistration-logo.png'
     }
   },
   computed: {

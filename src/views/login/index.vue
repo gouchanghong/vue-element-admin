@@ -12,7 +12,7 @@
         </div>
         <el-form-item prop="loginname">
           <span class="svg-container">
-            <img src="../../assets/login-images/account.png" >
+            <img src="/images/login-account.png" >
           </span>
           <el-input
             v-model="loginForm.loginname"
@@ -25,7 +25,7 @@
         </el-form-item>
         <el-form-item prop="password_original">
           <span class="svg-container">
-            <img src="../../assets/login-images/pwd.png" >
+            <img src="/images/login-pwd.png" >
           </span>
           <el-input
             v-model="loginForm.password_original"
@@ -39,7 +39,7 @@
         </el-form-item>
         <el-form-item prop="verificationcode">
           <span class="svg-container">
-            <img src="../../assets/login-images/check.png" >
+            <img src="/images/login-check.png" >
           </span>
           <el-input
             v-model="loginForm.verificationcode"
@@ -122,6 +122,7 @@ export default {
 
   },
   created() {
+    window.localStorage.clear()
     this.refreshCode()
     // window.addEventListener('hashchange', this.afterQRScan)
   },
@@ -276,7 +277,7 @@ $block_gray:#000;
   position: fixed;
   height: 100%;
   width: 100%;
-  background: url("../../assets/login-images/bg.png") no-repeat;
+  background: url("/images/login-bg.png") no-repeat;
   background-size:100% 100%;
   .login-form {
     position: absolute;
@@ -287,7 +288,7 @@ $block_gray:#000;
     height: 540px;
     max-width: 100%;
     margin: -270px auto auto auto;
-    background: url("../../assets/login-images/login.png") no-repeat;
+    background: url("/images/login-login.png") no-repeat;
     .login-form-div{
       padding: 70px;
     }

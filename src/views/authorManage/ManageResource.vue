@@ -164,10 +164,10 @@ export default {
       imageUrl: '',
       currentDept: null,
       deptList: [
-        { 'name': '基础平台', 'img': '../../../static/imgs/manage-resource-basic.png', url: 'dashboard' },
-        { 'name': '数据中心', 'img': '../../../static/imgs/manage-resource-data.png', url: 'permission' },
-        { 'name': '业务应用', 'img': '../../../static/imgs/manage-resource-mis.png', url: 'permission' },
-        { 'name': '综合监督', 'img': '../../../static/imgs/manage-resource-syn.png', url: 'permission' }
+        { 'name': '基础平台', 'img': '/images/manage-resource-basic.png', url: 'dashboard' },
+        { 'name': '数据中心', 'img': '/images/manage-resource-data.png', url: 'permission' },
+        { 'name': '业务应用', 'img': '/images/manage-resource-mis.png', url: 'permission' },
+        { 'name': '综合监督', 'img': '/images/manage-resource-syn.png', url: 'permission' }
       ],
       appData: [{
         'id': 1,

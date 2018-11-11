@@ -27,7 +27,7 @@ export default {
         newPassword: undefined,
         confirmPassword: undefined
       },
-      logoutImgUrl: '../../../static/imgs/logout-img.png',
+      logoutImgUrl: '/images/logout-img.png',
       logoutConfirmDialogTitle: '是否注销'
     }
   },

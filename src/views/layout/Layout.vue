@@ -2,7 +2,7 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <sidebar class="sidebar-container">
-      <img src="../../../static/welcome-images/zc.png" class="user-avatar">
+      <img src="/images/zc.png" class="user-avatar">
     </sidebar>
     <div class="main-container">
       <navbar/>

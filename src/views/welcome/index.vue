@@ -5,15 +5,15 @@
     <div class="el-row up">
       <div class="admin-option">
         <div>
-          <img src="../../../static/welcome-images/admin.png" >
+          <img src="/images/admin.png" >
           <a>系统管理员</a>
         </div>
         <div>
-          <img src="../../../static/welcome-images/pwd.png" >
+          <img src="/images/pwd.png" >
           <a @click="togglePasswordChangeDialog">{{ $t('navbar.changePassword') }}</a>
         </div>
         <div>
-          <img src="../../../static/welcome-images/logout.png" >
+          <img src="/images/logout.png" >
           <a @click="toggleLogoutConfirmDialog">{{ $t('navbar.logOut') }}</a>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default {
     .up{
       height: 60%;
       min-height: 60%;
-      background-image: url("../../../static/welcome-images/up-bg.png");
+      background-image: url("/images/up-bg.png");
       background-size:100% 100%;
       .admin-option{
         text-align: right;

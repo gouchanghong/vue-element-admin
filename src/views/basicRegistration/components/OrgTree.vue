@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       filterText: '',
-      img: { background: "url('../../../static/imgs/search-1.png')" },
+      img: { background: "url('/images/search-icon.png')" },
       data: [],
       defaultProps: {
         children: 'children',
