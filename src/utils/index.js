@@ -316,12 +316,12 @@ export function advancedQuery(params) {
   params.cs.forEach((item, index) => {
     if (item.f && item.v) {
       let p = 'cs[' + index + '].f=' + item.f
-      p += 'cs[' + index + '].o=' + item.o
-      let vv = item.v
+      p += '&cs[' + index + '].o=' + item.o
+      let vv = item.v + ''
       vv = vv.replace('，', ',')
       const vvs = vv.split(',')
       vvs.forEach((vs, i) => {
-        p += 'cs[' + index + '].v[' + i + ']=' + vs
+        p += '&cs[' + index + '].v[' + i + ']=' + vs
       })
       pp.push(p)
     }
@@ -329,7 +329,7 @@ export function advancedQuery(params) {
   params.ss.forEach((item, index) => {
     if (item.f && item.o) {
       let p = 'ss[' + index + '].f=' + item.f
-      p += 'ss[' + index + '].o=' + item.o
+      p += '&ss[' + index + '].o=' + item.o
       pp.push(p)
     }
   })

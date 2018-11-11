@@ -20,7 +20,7 @@ export function getRoleList(params, pagenumber, pagesize) {
  */
 export function getRole(id) {
   return request({
-    url: '/jcpt/roles/' + id,
+    url: '/jcpt/role/' + id,
     method: 'get'
   })
 }
@@ -81,5 +81,68 @@ export function saveRoleResources(roleid, resourceids) {
     url: '/jcpt/role/resources',
     method: 'put',
     data
+  })
+}
+
+/**
+ * 获取资源列表（分页）
+ * @param params 查询条件
+ * @param pagenumber 页码
+ * @param pagesize 每页条数
+ */
+export function getResourceList(params, pagenumber, pagesize) {
+  return request({
+    url: '/jcpt/resources/page?' + (params || ''),
+    method: 'get',
+    params: { pagenumber, pagesize }
+  })
+}
+
+/**
+ * 根据角色ID获取资源
+ * @param id
+ */
+export function getResource(id) {
+  return request({
+    url: '/jcpt/resource/' + id,
+    method: 'get'
+  })
+}
+
+/**
+ * 新增资源
+ * @param resourcetype 资源类型
+ * @param data
+ */
+export function saveResource(resourcetype, data) {
+  return request({
+    url: '/jcpt/resource/' + resourcetype,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 编辑资源
+ * @param resourcetype 资源类型
+ * @param data
+ */
+export function updateResource(resourcetype, data) {
+  return request({
+    url: '/jcpt/resource/' + resourcetype,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 删除资源
+ * @param resourcetype 资源类型
+ * @param id
+ */
+export function deleteResource(resourcetype, id) {
+  return request({
+    url: '/jcpt/resource/' + resourcetype + '/' + id,
+    method: 'delete'
   })
 }
