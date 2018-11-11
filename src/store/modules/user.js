@@ -85,6 +85,9 @@ const user = {
       if (window.localStorage.getItem('userChildResources')) {
         commit('SET_CHILD_RESOURCES', JSON.parse(window.localStorage.getItem('userChildResources')))
       }
+      if (window.localStorage.getItem('userName')) {
+        commit('SET_NAME', JSON.parse(window.localStorage.getItem('userName')))
+      }
       window.localStorage.clear()
       return new Promise((resolve, reject) => {
         // getUserInfo(state.token).then(response => {

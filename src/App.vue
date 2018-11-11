@@ -13,6 +13,7 @@ export default {
     window.addEventListener('beforeunload', () => {
       window.localStorage.setItem('userResources', JSON.stringify(this.$store.state.user.resources))
       window.localStorage.setItem('userChildResources', JSON.stringify(this.$store.state.user.childResources))
+      window.localStorage.setItem('userName', JSON.stringify(this.$store.state.user.name))
     })
   }
 }
