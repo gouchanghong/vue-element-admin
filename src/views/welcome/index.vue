@@ -6,7 +6,7 @@
       <div class="admin-option">
         <div>
           <img src="/images/admin.png" >
-          <a>系统管理员</a>
+          <a>{{ name }}</a>
         </div>
         <div>
           <img src="/images/pwd.png" >
@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import PasswordChange from '@/components/PasswordChange'
 import LogoutConfirm from '@/components/LogoutConfirm'
 
@@ -55,7 +56,9 @@ export default {
     }
   },
   computed: {
-    //
+    ...mapGetters([
+      'name'
+    ])
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
